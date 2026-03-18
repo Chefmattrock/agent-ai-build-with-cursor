@@ -1,0 +1,413 @@
+[
+  {
+    "id": "se000001-0001-0001-0001-000000000001",
+    "type": "get_user_input",
+    "label": "Email Type",
+    "order": 0,
+    "inputs": [
+      {
+        "name": "input_type",
+        "value": "dropdown (single)",
+        "type": "dropdown",
+        "required": true,
+        "dropdownOptions": [
+          {"label": "Cold Outreach", "value": "cold_outreach"},
+          {"label": "Follow-Up", "value": "follow_up"},
+          {"label": "Meeting Request", "value": "meeting_request"},
+          {"label": "Re-engagement", "value": "reengagement"}
+        ]
+      },
+      {
+        "name": "input_description",
+        "value": "What type of email are you writing?",
+        "type": "text",
+        "required": true
+      },
+      {
+        "name": "input_name",
+        "value": "email_type",
+        "type": "text",
+        "required": true
+      }
+    ]
+  },
+  {
+    "id": "se000001-0001-0001-0001-000000000002",
+    "type": "get_user_input",
+    "label": "Tone",
+    "order": 1,
+    "inputs": [
+      {
+        "name": "input_type",
+        "value": "dropdown (single)",
+        "type": "dropdown",
+        "required": true,
+        "dropdownOptions": [
+          {"label": "Friendly", "value": "friendly"},
+          {"label": "Professional", "value": "professional"},
+          {"label": "Casual", "value": "casual"},
+          {"label": "Formal", "value": "formal"}
+        ]
+      },
+      {
+        "name": "input_description",
+        "value": "What tone should the email have?",
+        "type": "text",
+        "required": true
+      },
+      {
+        "name": "input_name",
+        "value": "tone",
+        "type": "text",
+        "required": true
+      }
+    ]
+  },
+  {
+    "id": "se000001-0001-0001-0001-000000000003",
+    "type": "get_user_input",
+    "label": "Prospect Intel",
+    "order": 2,
+    "inputs": [
+      {
+        "name": "input_type",
+        "value": "textarea",
+        "type": "dropdown",
+        "required": true
+      },
+      {
+        "name": "input_description",
+        "value": "What do you know about them? (LinkedIn profiles, CRM notes — anything helps)",
+        "type": "text",
+        "required": true
+      },
+      {
+        "name": "input_name",
+        "value": "prospect_intel",
+        "type": "text",
+        "required": true
+      }
+    ]
+  },
+  {
+    "id": "se000001-0001-0001-0001-000000000004",
+    "type": "get_user_input",
+    "label": "Email Length",
+    "order": 3,
+    "inputs": [
+      {
+        "name": "input_type",
+        "value": "dropdown (single)",
+        "type": "dropdown",
+        "required": true,
+        "dropdownOptions": [
+          {"label": "Short (2-3 sentences)", "value": "short"},
+          {"label": "Medium (4-6 sentences)", "value": "medium"},
+          {"label": "Detailed (7+ sentences)", "value": "detailed"}
+        ]
+      },
+      {
+        "name": "input_description",
+        "value": "How long should this be? (Shorter usually wins.)",
+        "type": "text",
+        "required": true
+      },
+      {
+        "name": "input_name",
+        "value": "email_length",
+        "type": "text",
+        "required": true
+      }
+    ]
+  },
+  {
+    "id": "se000001-0001-0001-0001-000000000005",
+    "type": "get_user_input",
+    "label": "Specific Ask",
+    "order": 4,
+    "inputs": [
+      {
+        "name": "input_type",
+        "value": "textarea",
+        "type": "dropdown",
+        "required": false
+      },
+      {
+        "name": "input_description",
+        "value": "Any specific asks? (Objections to tackle, points to hit — tell us what matters.)",
+        "type": "text",
+        "required": true
+      },
+      {
+        "name": "input_name",
+        "value": "specific_ask",
+        "type": "text",
+        "required": true
+      }
+    ]
+  },
+  {
+    "id": "se000001-0001-0001-0001-000000000006",
+    "type": "invoke_llm",
+    "label": "Extract URLs",
+    "order": 5,
+    "inputs": [
+      {
+        "name": "llm_engine",
+        "value": "gpt-5-nano",
+        "type": "dropdown",
+        "required": true
+      },
+      {
+        "name": "instructions",
+        "value": "Extract any URLs from the following text and return them as a JSON array of strings. If no URLs found, return [].\n\nText: {{prospect_intel}}",
+        "type": "textarea",
+        "required": true
+      },
+      {
+        "name": "output_variable_name",
+        "value": "extracted_urls",
+        "type": "text",
+        "required": true
+      }
+    ]
+  },
+  {
+    "id": "se000001-0001-0001-0001-000000000007",
+    "type": "set_variable",
+    "label": "Initialize URL Summaries",
+    "order": 6,
+    "inputs": [
+      {
+        "name": "variable_name",
+        "value": "url_summaries",
+        "type": "text",
+        "required": true
+      },
+      {
+        "name": "value",
+        "value": "[]",
+        "type": "text",
+        "required": true
+      }
+    ]
+  },
+  {
+    "id": "se000001-0001-0001-0001-000000000008",
+    "type": "for_condition",
+    "label": "For Each URL",
+    "order": 7,
+    "inputs": [
+      {
+        "name": "list_variable",
+        "value": "extracted_urls",
+        "type": "text",
+        "required": true
+      },
+      {
+        "name": "item_variable",
+        "value": "current_url",
+        "type": "text",
+        "required": true
+      }
+    ]
+  },
+  {
+    "id": "se000001-0001-0001-0001-000000000009",
+    "type": "serverless_function",
+    "label": "Scrape URL Content",
+    "order": 8,
+    "inputs": [
+      {
+        "name": "language",
+        "value": "python",
+        "type": "dropdown",
+        "required": true
+      },
+      {
+        "name": "code",
+        "value": "import requests\nfrom bs4 import BeautifulSoup\n\nurl = '{{current_url}}'\ntry:\n    response = requests.get(url, timeout=10)\n    soup = BeautifulSoup(response.content, 'html.parser')\n    for script in soup(['script', 'style']):\n        script.decompose()\n    text = soup.get_text(separator=' ', strip=True)\n    result = text[:5000]\nexcept:\n    result = 'Could not fetch content'",
+        "type": "textarea",
+        "required": true
+      },
+      {
+        "name": "output_variable_name",
+        "value": "scraped_content",
+        "type": "text",
+        "required": true
+      }
+    ]
+  },
+  {
+    "id": "se000001-0001-0001-0001-000000000010",
+    "type": "invoke_llm",
+    "label": "Summarize Page",
+    "order": 9,
+    "inputs": [
+      {
+        "name": "llm_engine",
+        "value": "gpt-5-mini",
+        "type": "dropdown",
+        "required": true
+      },
+      {
+        "name": "instructions",
+        "value": "Summarize this web page content in 2-3 sentences, focusing on information useful for a sales email:\n\n{{scraped_content}}",
+        "type": "textarea",
+        "required": true
+      },
+      {
+        "name": "output_variable_name",
+        "value": "page_summary",
+        "type": "text",
+        "required": true
+      }
+    ]
+  },
+  {
+    "id": "se000001-0001-0001-0001-000000000011",
+    "type": "add_to_list",
+    "label": "Collect Summary",
+    "order": 10,
+    "inputs": [
+      {
+        "name": "list_variable",
+        "value": "url_summaries",
+        "type": "text",
+        "required": true
+      },
+      {
+        "name": "item_value",
+        "value": "{{page_summary}}",
+        "type": "text",
+        "required": true
+      }
+    ]
+  },
+  {
+    "id": "se000001-0001-0001-0001-000000000012",
+    "type": "end_condition",
+    "label": "End For Loop",
+    "order": 11,
+    "inputs": []
+  },
+  {
+    "id": "se000001-0001-0001-0001-000000000013",
+    "type": "if_condition",
+    "label": "If LinkedIn URL",
+    "order": 12,
+    "inputs": [
+      {
+        "name": "query",
+        "value": "'linkedin.com' in '{{prospect_intel}}'",
+        "type": "textarea",
+        "required": true
+      }
+    ]
+  },
+  {
+    "id": "se000001-0001-0001-0001-000000000014",
+    "type": "invoke_llm",
+    "label": "Extract LinkedIn URL",
+    "order": 13,
+    "inputs": [
+      {
+        "name": "llm_engine",
+        "value": "gpt-5-nano",
+        "type": "dropdown",
+        "required": true
+      },
+      {
+        "name": "instructions",
+        "value": "Extract the LinkedIn profile URL from this text. Return only the URL, nothing else:\n\n{{prospect_intel}}",
+        "type": "textarea",
+        "required": true
+      },
+      {
+        "name": "output_variable_name",
+        "value": "linkedin_url",
+        "type": "text",
+        "required": true
+      }
+    ]
+  },
+  {
+    "id": "se000001-0001-0001-0001-000000000015",
+    "type": "get_linkedin_profile",
+    "label": "Get LinkedIn Profile",
+    "order": 14,
+    "inputs": [
+      {
+        "name": "profile_url",
+        "value": "{{linkedin_url}}",
+        "type": "text",
+        "required": true
+      },
+      {
+        "name": "output_variable_name",
+        "value": "prospect_linkedin",
+        "type": "text",
+        "required": true
+      }
+    ]
+  },
+  {
+    "id": "se000001-0001-0001-0001-000000000016",
+    "type": "end_condition",
+    "label": "End If",
+    "order": 15,
+    "inputs": []
+  },
+  {
+    "id": "se000001-0001-0001-0001-000000000017",
+    "type": "invoke_llm",
+    "label": "Generate Email Variations",
+    "order": 16,
+    "inputs": [
+      {
+        "name": "llm_engine",
+        "value": "gpt-5",
+        "type": "dropdown",
+        "required": true
+      },
+      {
+        "name": "instructions",
+        "value": "You are a sales email expert. Generate 3 variations of a personalized sales email.\n\n## CONTEXT\nYour LinkedIn: {{user_linkedin_profile}}\nYour Writing Style: {{user_writing_style}}\n\n## PROSPECT INTELLIGENCE\nRaw Input: {{prospect_intel}}\nResearched Context: {{url_summaries}}\nLinkedIn Data: {{prospect_linkedin}}\n\n## EMAIL REQUIREMENTS\n- Type: {{email_type}}\n- Tone: {{tone}}\n- Length: {{email_length}}\n- Specific Ask: {{specific_ask}}\n\n## GUIDELINES BY EMAIL TYPE\n\n### Cold Outreach\n- Lead with value, not your product\n- Reference something specific about them\n- Ask for a small commitment (not a demo)\n\n### Follow-Up\n- Reference your previous interaction\n- Add new value (insight, resource, idea)\n- Make the next step crystal clear\n\n### Meeting Request\n- State the purpose upfront\n- Suggest specific times\n- Make it easy to say yes or no\n\n### Re-engagement\n- Acknowledge time has passed\n- Lead with what's new or changed\n- Keep it short and low-pressure\n\n## OUTPUT FORMAT\nGenerate exactly 3 variations:\n\n### Variation 1: Direct\n[Subject line]\n[Email body]\n\n### Variation 2: Story-led\n[Subject line]\n[Email body]\n\n### Variation 3: Question-led\n[Subject line]\n[Email body]\n\nMake each variation distinct in approach while maintaining the same core message.",
+        "type": "textarea",
+        "required": true
+      },
+      {
+        "name": "output_variable_name",
+        "value": "email_variations",
+        "type": "text",
+        "required": true
+      }
+    ]
+  },
+  {
+    "id": "se000001-0001-0001-0001-000000000018",
+    "type": "output_formatter",
+    "label": "Display Emails",
+    "order": 17,
+    "inputs": [
+      {
+        "name": "heading",
+        "value": "Your Email Drafts — Ready to Send",
+        "type": "text",
+        "required": false
+      },
+      {
+        "name": "output_formatted",
+        "value": "{{email_variations}}",
+        "type": "textarea",
+        "required": true
+      },
+      {
+        "name": "format",
+        "value": "markdown",
+        "type": "dropdown",
+        "required": true
+      }
+    ]
+  }
+]

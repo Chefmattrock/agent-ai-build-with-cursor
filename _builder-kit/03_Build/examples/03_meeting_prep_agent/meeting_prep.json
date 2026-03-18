@@ -1,0 +1,1092 @@
+[
+  {
+    "id": "a0000001-0001-0001-0001-000000000001",
+    "type": "GOOGLECALENDAR_GOOGLE_CALENDAR_EVENT_SYNC_TRIGGER",
+    "label": "Calendar Event Sync",
+    "order": 0,
+    "inputs": [
+      {
+        "name": "runAs",
+        "value": "user",
+        "type": "dropdown",
+        "required": true
+      },
+      {
+        "name": "calendarId",
+        "value": "primary",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "maxResults",
+        "value": 10,
+        "type": "number",
+        "required": false
+      },
+      {
+        "name": "showDeleted",
+        "value": true,
+        "type": "checkbox",
+        "required": false
+      },
+      {
+        "name": "output_variable_name",
+        "value": "trigger_data",
+        "type": "text",
+        "required": false
+      }
+    ],
+    "disabled": false
+  },
+  {
+    "id": "a0000001-0001-0001-0001-000000000002",
+    "type": "if_condition",
+    "label": "If No Trigger Data",
+    "order": 1,
+    "inputs": [
+      {
+        "name": "else",
+        "value": true,
+        "type": "checkbox",
+        "required": false
+      },
+      {
+        "name": "query",
+        "value": "{{trigger_data}} == \"{}\"",
+        "type": "textarea",
+        "required": false
+      }
+    ]
+  },
+  {
+    "id": "a0000001-0001-0001-0001-000000000003",
+    "type": "get_calendar_events_list",
+    "label": "Get Calendar Events List",
+    "order": 2,
+    "inputs": [
+      {
+        "name": "calendar_provider",
+        "value": "googlecalendar",
+        "type": "dropdown",
+        "required": true
+      },
+      {
+        "name": "event_filter",
+        "value": "future",
+        "type": "dropdown",
+        "required": true
+      },
+      {
+        "name": "max_events",
+        "value": "30",
+        "type": "text",
+        "required": true
+      },
+      {
+        "name": "primary_calendar_only",
+        "value": true,
+        "type": "checkbox",
+        "required": true
+      },
+      {
+        "name": "output_format",
+        "value": "text",
+        "type": "dropdown",
+        "required": true
+      },
+      {
+        "name": "output_variable_name",
+        "value": "gcal_events_list",
+        "type": "text",
+        "required": true
+      }
+    ],
+    "required_data_integrations": [
+      "googlecalendar"
+    ]
+  },
+  {
+    "id": "a0000001-0001-0001-0001-000000000004",
+    "type": "get_user_input",
+    "label": "Select Meeting",
+    "order": 3,
+    "inputs": [
+      {
+        "name": "input_type",
+        "value": "dropdown (single)",
+        "type": "dropdown",
+        "required": true,
+        "dropdownOptions": [
+          {
+            "label": "{{gcal_events_list}}",
+            "value": "{{gcal_events_list}}"
+          }
+        ]
+      },
+      {
+        "name": "input_description",
+        "value": "Select the meeting to prepare you for",
+        "type": "text",
+        "required": true
+      },
+      {
+        "name": "required",
+        "value": true,
+        "type": "checkbox",
+        "required": false
+      },
+      {
+        "name": "input_name",
+        "value": "selected_meeting",
+        "type": "text",
+        "required": true
+      }
+    ]
+  },
+  {
+    "id": "a0000001-0001-0001-0001-000000000005",
+    "type": "invoke_llm",
+    "label": "Extract Calendar Event ID",
+    "order": 4,
+    "inputs": [
+      {
+        "name": "llm_engine",
+        "value": "gpt-5-nano",
+        "type": "dropdown",
+        "required": true
+      },
+      {
+        "name": "instructions",
+        "value": "Extract the meeting ID from the following input: <input>{{selected_meeting}}</input>\n\nFor instance, if the input is \"Important Meeting [startDate-endDate] (#123456)\", return back only 123456, nothing else.",
+        "type": "textarea",
+        "required": true
+      },
+      {
+        "name": "output_variable_name",
+        "value": "calendar_event_id",
+        "type": "text",
+        "required": false
+      }
+    ]
+  },
+  {
+    "id": "a0000001-0001-0001-0001-000000000006",
+    "type": "enrich_calendar_event",
+    "label": "Enrich Calendar Event",
+    "order": 5,
+    "inputs": [
+      {
+        "name": "calendar_provider",
+        "value": "googlecalendar",
+        "type": "dropdown",
+        "required": true
+      },
+      {
+        "name": "event_id",
+        "value": "{{calendar_event_id}}",
+        "type": "text",
+        "required": true
+      },
+      {
+        "name": "include_attendees",
+        "value": true,
+        "type": "checkbox",
+        "required": false
+      },
+      {
+        "name": "include_description",
+        "value": true,
+        "type": "checkbox",
+        "required": false
+      },
+      {
+        "name": "include_transcript",
+        "value": false,
+        "type": "checkbox",
+        "required": false
+      },
+      {
+        "name": "include_ai_insights",
+        "value": true,
+        "type": "checkbox",
+        "required": false
+      },
+      {
+        "name": "scrape_context_documents",
+        "value": true,
+        "type": "checkbox",
+        "required": false
+      },
+      {
+        "name": "output_variable_name",
+        "value": "enriched_calendar_event",
+        "type": "text",
+        "required": true
+      }
+    ],
+    "required_data_integrations": [
+      "googlecalendar"
+    ]
+  },
+  {
+    "id": "a0000001-0001-0001-0001-000000000007",
+    "type": "end_condition",
+    "label": "End If/Else",
+    "order": 6,
+    "inputs": []
+  },
+  {
+    "id": "a0000001-0001-0001-0001-000000000008",
+    "type": "parallel_condition",
+    "label": "Parallel: Initial Processing",
+    "order": 7,
+    "inputs": [
+      {
+        "name": "output_variable_name",
+        "value": "initial_parallel",
+        "type": "text",
+        "required": false
+      }
+    ]
+  },
+  {
+    "id": "a0000001-0001-0001-0001-000000000009",
+    "type": "invoke_llm",
+    "label": "Generate Subject Line",
+    "order": 8,
+    "inputs": [
+      {
+        "name": "llm_engine",
+        "value": "gpt-5-nano",
+        "type": "dropdown",
+        "required": true
+      },
+      {
+        "name": "instructions",
+        "value": "Extract the title of the event and date for a re: email subject line from the following selected meeting input: <input>{{selected_meeting}}</input>\n\nFor instance, if the input is \"Important Meeting [startDate-endDate] (#123456)\", return back only something along the lines of \"Re: Important Meeting (computed date in EST)\"",
+        "type": "textarea",
+        "required": true
+      },
+      {
+        "name": "output_variable_name",
+        "value": "results_subject_line",
+        "type": "text",
+        "required": false
+      }
+    ]
+  },
+  {
+    "id": "a0000001-0001-0001-0001-000000000010",
+    "type": "invoke_llm",
+    "label": "Process Calendar Event Data",
+    "order": 9,
+    "inputs": [
+      {
+        "name": "llm_engine",
+        "value": "gpt-5",
+        "type": "dropdown",
+        "required": true
+      },
+      {
+        "name": "instructions",
+        "value": "EXTRACT from Google Calendar event:\n  - Title, Description/notes\n  - Start time, end time, duration\n  - Attendees list (all)\n  - Conference/meeting link, Location\n  - Recurrence pattern, Organizer\n\nThe current user is {{user_email}} {{_google_email}}.\n\nPROCESS attendees:\n  - Split into internal vs external (by email domain)\n  - Identify organizer\n  - Mark required vs optional\n  - Extract company domains from external attendees\n\n<google_calendar_event>\n{{enriched_calendar_event}}\n</google_calendar_event>\n\nRespond with ONLY valid JSON:\n{\n  \"event\": {\"title\": \"string\", \"description\": \"string or null\", \"start_time\": \"ISO 8601\", \"end_time\": \"ISO 8601\", \"duration_minutes\": \"number\", \"location\": {\"type\": \"physical | virtual | hybrid | none\", \"address\": \"string or null\"}, \"recurrence\": {\"is_recurring\": \"boolean\", \"pattern\": \"string\"}, \"conference_link\": \"string or null\", \"organizer\": {\"name\": \"string\", \"email\": \"string\", \"domain\": \"string\"}},\n  \"attendees\": {\"internal\": [{\"name\": \"string\", \"email\": \"string\", \"attendance_type\": \"required | optional\"}], \"external\": [{\"name\": \"string\", \"email\": \"string\", \"domain\": \"string\", \"company\": \"string\", \"attendance_type\": \"required | optional\"}], \"summary\": {\"total_count\": \"number\", \"internal_count\": \"number\", \"external_count\": \"number\", \"external_domains\": [], \"external_companies\": []}}\n}",
+        "type": "textarea",
+        "required": true
+      },
+      {
+        "name": "output_variable_name",
+        "value": "processed_gcal_event",
+        "type": "text",
+        "required": false
+      }
+    ]
+  },
+  {
+    "id": "a0000001-0001-0001-0001-000000000011",
+    "type": "end_parallel_condition",
+    "label": "End Parallel: Initial",
+    "order": 10,
+    "inputs": []
+  },
+  {
+    "id": "a0000001-0001-0001-0001-000000000012",
+    "type": "parallel_condition",
+    "label": "Parallel: Research Phase",
+    "order": 11,
+    "inputs": [
+      {
+        "name": "output_variable_name",
+        "value": "research_parallel",
+        "type": "text",
+        "required": false
+      }
+    ]
+  },
+  {
+    "id": "a0000001-0001-0001-0001-000000000013",
+    "type": "invoke_llm",
+    "label": "Extract Seller Info",
+    "order": 12,
+    "inputs": [
+      {
+        "name": "llm_engine",
+        "value": "gpt-5",
+        "type": "dropdown",
+        "required": true
+      },
+      {
+        "name": "instructions",
+        "value": "Extract the meeting host/organizer (the seller) from the calendar event.\n\nINPUT:\n<calendar_event>{{processed_gcal_event}}</calendar_event>\n\nOUTPUT (JSON):\n{\"seller_name\": \"string\", \"seller_email\": \"string\", \"seller_company\": \"string\", \"is_identified\": true/false}",
+        "type": "textarea",
+        "required": true
+      },
+      {
+        "name": "output_variable_name",
+        "value": "seller_info",
+        "type": "text",
+        "required": false
+      }
+    ]
+  },
+  {
+    "id": "a0000001-0001-0001-0001-000000000014",
+    "type": "invoke_llm",
+    "label": "Analyze Topic Signals",
+    "order": 13,
+    "inputs": [
+      {
+        "name": "llm_engine",
+        "value": "gpt-5",
+        "type": "dropdown",
+        "required": true
+      },
+      {
+        "name": "instructions",
+        "value": "ANALYZE the meeting to identify signals from title and description.\n\nINPUT: <event>{{processed_gcal_event}}</event>\n\nKeyword patterns: demo/product tour → Demo, intro/discovery → First contact, technical/architecture → Technical, pricing/proposal → Negotiation, renewal/expansion → Renewal, QBR/quarterly → Strategic review, kickoff/onboarding → Onboarding, issue/urgent → Problem solving\n\nOUTPUT (JSON):\n{\"meeting_signals\": {\"primary_signal\": {\"type\": \"string\", \"confidence\": \"number\", \"matched_keywords\": []}, \"secondary_signals\": []}, \"context_summary\": {\"meeting_stage\": \"pre_sales | onboarding | active_customer | renewal | support\", \"urgency_level\": \"low | medium | high | critical\", \"key_topics\": []}}",
+        "type": "textarea",
+        "required": true
+      },
+      {
+        "name": "output_variable_name",
+        "value": "topic_signals",
+        "type": "text",
+        "required": false
+      }
+    ]
+  },
+  {
+    "id": "a0000001-0001-0001-0001-000000000015",
+    "type": "get_calendar_events_list",
+    "label": "Get Past Calendar Events",
+    "order": 14,
+    "inputs": [
+      {
+        "name": "calendar_provider",
+        "value": "googlecalendar",
+        "type": "dropdown",
+        "required": true
+      },
+      {
+        "name": "event_filter",
+        "value": "past",
+        "type": "dropdown",
+        "required": true
+      },
+      {
+        "name": "max_events",
+        "value": "30",
+        "type": "text",
+        "required": true
+      },
+      {
+        "name": "primary_calendar_only",
+        "value": true,
+        "type": "checkbox",
+        "required": true
+      },
+      {
+        "name": "output_format",
+        "value": "text",
+        "type": "dropdown",
+        "required": true
+      },
+      {
+        "name": "output_variable_name",
+        "value": "past_calendar_events",
+        "type": "text",
+        "required": true
+      }
+    ],
+    "required_data_integrations": [
+      "googlecalendar"
+    ]
+  },
+  {
+    "id": "a0000001-0001-0001-0001-000000000016",
+    "type": "invoke_llm",
+    "label": "Extract Raw Attendees",
+    "order": 15,
+    "inputs": [
+      {
+        "name": "llm_engine",
+        "value": "gpt-5-mini",
+        "type": "dropdown",
+        "required": true
+      },
+      {
+        "name": "instructions",
+        "value": "Extract ALL attendees from the calendar event (excluding the current user/organizer).\n\nINPUT: <event>{{processed_gcal_event}}</event>\n\nOrganizer domain: {{processed_gcal_event.event.organizer.domain}}\n\nClassify each attendee as internal (same email domain as organizer) or external (different email domain).\n\nDO NOT try to infer company names from domains - the Contact Research Agent will handle that.\nJust extract the raw name and email exactly as they appear on the calendar invite.\n\nOUTPUT (JSON):\n{\n  \"external_attendees\": [\n    {\"name\": \"string (exactly as shown on invite)\", \"email\": \"string\"}\n  ],\n  \"internal_attendees\": [\n    {\"name\": \"string\", \"email\": \"string\"}\n  ],\n  \"metadata\": {\n    \"total_external\": \"number\",\n    \"total_internal\": \"number\",\n    \"organizer_domain\": \"string\"\n  }\n}",
+        "type": "textarea",
+        "required": true
+      },
+      {
+        "name": "output_variable_name",
+        "value": "classified_attendees",
+        "type": "text",
+        "required": false
+      }
+    ]
+  },
+  {
+    "id": "a0000001-0001-0001-0001-000000000017",
+    "type": "end_parallel_condition",
+    "label": "End Parallel: Research",
+    "order": 16,
+    "inputs": []
+  },
+  {
+    "id": "a0000001-0001-0001-0001-000000000018",
+    "type": "parallel_condition",
+    "label": "Parallel: Context Synthesis",
+    "order": 17,
+    "inputs": [
+      {
+        "name": "output_variable_name",
+        "value": "context_parallel",
+        "type": "text",
+        "required": false
+      }
+    ]
+  },
+  {
+    "id": "a0000001-0001-0001-0001-000000000019",
+    "type": "find_linkedin_profile",
+    "label": "Find Seller LinkedIn",
+    "order": 18,
+    "inputs": [
+      {
+        "name": "query",
+        "value": "{{seller_info.seller_name}} {{seller_info.seller_company}}",
+        "type": "text",
+        "required": true
+      },
+      {
+        "name": "output_variable_name",
+        "value": "seller_linkedin_slug",
+        "type": "text",
+        "required": true
+      }
+    ]
+  },
+  {
+    "id": "a0000001-0001-0001-0001-000000000020",
+    "type": "invoke_llm",
+    "label": "Analyze Meeting Relationships",
+    "order": 19,
+    "inputs": [
+      {
+        "name": "llm_engine",
+        "value": "gpt-5",
+        "type": "dropdown",
+        "required": true
+      },
+      {
+        "name": "instructions",
+        "value": "IDENTIFY meeting relationships by analyzing current event against calendar history.\n\nINPUT:\n<event>{{processed_gcal_event}}</event>\n<topic_signals>{{topic_signals}}</topic_signals>\n<calendar_history>{{past_calendar_events}}</calendar_history>\n\nOUTPUT (JSON):\n{\"relationship_status\": {\"is_first_meeting\": \"boolean\", \"total_previous_meetings\": \"number\", \"last_interaction_date\": \"string or null\", \"relationship_stage\": \"new | early | developing | established | mature\"}, \"topic_continuity\": {\"related_meetings\": [], \"has_progression\": \"boolean\"}, \"insights\": {\"relationship_summary\": \"string\", \"key_patterns\": [], \"recommendations\": []}}",
+        "type": "textarea",
+        "required": true
+      },
+      {
+        "name": "output_variable_name",
+        "value": "meeting_relationships",
+        "type": "text",
+        "required": false
+      }
+    ]
+  },
+  {
+    "id": "a0000001-0001-0001-0001-000000000021",
+    "type": "invoke_llm",
+    "label": "Classify Meeting Type",
+    "order": 20,
+    "inputs": [
+      {
+        "name": "llm_engine",
+        "value": "gpt-5",
+        "type": "dropdown",
+        "required": true
+      },
+      {
+        "name": "instructions",
+        "value": "CLASSIFY the meeting using multi-factor scoring.\n\nINPUT:\n<event>{{processed_gcal_event}}</event>\n<topic_signals>{{topic_signals}}</topic_signals>\n<relationships>{{meeting_relationships}}</relationships>\n\nMEETING TYPES: first_contact, product_demo, technical_deep_dive, negotiation, renewal, qbr_strategic_review, onboarding, problem_solving, check_in\n\nOUTPUT (JSON):\n{\"classification\": {\"primary_type\": \"string\", \"primary_confidence\": \"number (0-100)\", \"alternative_type\": \"string or null\"}, \"attributes\": {\"buyer_stage\": \"awareness | consideration | decision | retention\", \"urgency\": \"high | medium | low\", \"complexity\": \"simple | complex\", \"relationship_maturity\": \"cold | warm | hot\"}}",
+        "type": "textarea",
+        "required": true
+      },
+      {
+        "name": "output_variable_name",
+        "value": "meeting_classification",
+        "type": "text",
+        "required": false
+      }
+    ]
+  },
+  {
+    "id": "a0000001-0001-0001-0001-000000000022",
+    "type": "end_parallel_condition",
+    "label": "End Parallel: Context",
+    "order": 21,
+    "inputs": []
+  },
+  {
+    "id": "a0000001-0001-0001-0001-000000000022a",
+    "type": "if_condition",
+    "label": "If Seller LinkedIn Found",
+    "order": 22,
+    "inputs": [
+      {
+        "name": "query",
+        "value": "{{seller_linkedin_slug}} is not empty and {{seller_linkedin_slug}} != 'null' and {{seller_linkedin_slug}} != ''",
+        "type": "textarea",
+        "required": false
+      }
+    ]
+  },
+  {
+    "id": "a0000001-0001-0001-0001-000000000023",
+    "type": "get_linkedin_profile",
+    "label": "Get Seller LinkedIn Profile",
+    "order": 23,
+    "inputs": [
+      {
+        "name": "profile_handle",
+        "value": "{{seller_linkedin_slug}}",
+        "type": "text",
+        "required": true
+      },
+      {
+        "name": "output_variable_name",
+        "value": "seller_linkedin_profile",
+        "type": "text",
+        "required": true
+      }
+    ]
+  },
+  {
+    "id": "a0000001-0001-0001-0001-000000000024",
+    "type": "invoke_llm",
+    "label": "Synthesize Seller Context",
+    "order": 24,
+    "inputs": [
+      {
+        "name": "llm_engine",
+        "value": "gpt-5",
+        "type": "dropdown",
+        "required": true
+      },
+      {
+        "name": "instructions",
+        "value": "Synthesize the seller's LinkedIn profile into useful context.\n\nINPUT:\n<seller_linkedin>{{seller_linkedin_profile}}</seller_linkedin>\n<seller_info>{{seller_info}}</seller_info>\n\nOUTPUT (JSON):\n{\"seller_profile\": {\"name\": \"string\", \"title\": \"string\", \"company\": \"string\", \"linkedin_url\": \"string\"}, \"what_they_sell\": {\"product_or_service\": \"string\", \"value_proposition\": \"string\", \"target_customers\": \"string\", \"key_differentiators\": []}, \"seller_background\": {\"expertise\": [], \"experience_summary\": \"string\", \"credibility_signals\": []}, \"meeting_relevance\": {\"why_theyre_the_right_person\": \"string\", \"topics_they_can_speak_to\": []}}",
+        "type": "textarea",
+        "required": true
+      },
+      {
+        "name": "output_variable_name",
+        "value": "seller_context",
+        "type": "text",
+        "required": false
+      }
+    ]
+  },
+  {
+    "id": "a0000001-0001-0001-0001-000000000024a",
+    "type": "end_condition",
+    "label": "End If Seller LinkedIn",
+    "order": 25,
+    "inputs": []
+  },
+  {
+    "id": "a0000001-0001-0001-0001-000000000025",
+    "type": "invoke_llm",
+    "label": "Extract Target Company",
+    "order": 26,
+    "inputs": [
+      {
+        "name": "llm_engine",
+        "value": "gpt-5-mini",
+        "type": "dropdown",
+        "required": true
+      },
+      {
+        "name": "instructions",
+        "value": "Extract the PRIMARY external company from the meeting attendees.\n\nINPUT: <external_attendees>{{classified_attendees}}</external_attendees>\n\nIdentify the primary company (most attendees, or first if tied). Clean the domain (remove mail., email. prefixes).\n\nOUTPUT (JSON):\n{\"company_name\": \"string\", \"domain\": \"string\", \"is_personal_email\": \"boolean\", \"primary_contact_email\": \"string\", \"primary_contact_name\": \"string\", \"attendee_count\": \"number\", \"attendee_names\": [], \"confidence\": \"high | medium | low\"}",
+        "type": "textarea",
+        "required": true
+      },
+      {
+        "name": "output_variable_name",
+        "value": "target_company_identity",
+        "type": "text",
+        "required": false
+      }
+    ]
+  },
+  {
+    "id": "a0000001-0001-0001-0001-000000000026",
+    "type": "invoke_agent",
+    "label": "🏢 Run Company Intelligence Agent",
+    "order": 27,
+    "inputs": [
+      {
+        "name": "module",
+        "value": "1tfs7g1kcbwjxo8m",
+        "type": "text",
+        "required": true
+      },
+      {
+        "name": "params",
+        "value": "full_name=n/a\ncontact_email=contact@{{target_company_identity.domain}}",
+        "type": "keyvalues",
+        "required": false,
+        "kv": {
+          "full_name": "n/a",
+          "contact_email": "contact@{{target_company_identity.domain}}"
+        }
+      },
+      {
+        "name": "output_variable_name",
+        "value": "company_intelligence",
+        "type": "text",
+        "required": true
+      }
+    ],
+    "disabled": false
+  },
+  {
+    "id": "a0000001-0001-0001-0001-000000000027b",
+    "type": "invoke_llm",
+    "label": "📋 Summarize Internal Attendees",
+    "order": 28,
+    "inputs": [
+      {
+        "name": "llm_engine",
+        "value": "gpt-5-mini",
+        "type": "dropdown",
+        "required": true
+      },
+      {
+        "name": "instructions",
+        "value": "Summarize the internal team members joining this meeting (no deep research needed).\n\nINTERNAL ATTENDEES:\n{{classified_attendees.internal_attendees}}\n\nSELLER CONTEXT (if available):\n{{seller_context}}\n\nUSER INFO:\n{{user.context.first_name}} {{user.context.last_name}} ({{_google_email}})\n\nFor each internal attendee:\n1. Parse their name from email if name not provided (e.g., chris.b@mail.agent.ai → Chris B.)\n2. If they match the seller/user context, note their role\n3. Keep it brief - just name and inferred role\n\nOUTPUT (JSON):\n{\n  \"internal_team_summary\": {\n    \"count\": \"number\",\n    \"team_members\": [\n      {\"name\": \"string\", \"email\": \"string\", \"role\": \"Meeting organizer | Internal attendee | Host\"}\n    ],\n    \"note\": \"Brief note about team composition if relevant (e.g., Large internal team suggests important meeting)\"\n  }\n}",
+        "type": "textarea",
+        "required": true
+      },
+      {
+        "name": "output_variable_name",
+        "value": "internal_team_summary",
+        "type": "text",
+        "required": false
+      }
+    ]
+  },
+  {
+    "id": "a0000001-0001-0001-0001-000000000027",
+    "type": "parallel_for_condition",
+    "label": "⚡ Parallel: Process External Attendees",
+    "order": 29,
+    "inputs": [
+      {
+        "name": "loop_count",
+        "value": "{{classified_attendees.external_attendees}}",
+        "type": "text",
+        "required": true
+      },
+      {
+        "name": "output_variable_name",
+        "value": "current_attendee",
+        "type": "text",
+        "required": true
+      },
+      {
+        "name": "variable_name",
+        "value": "attendee_index",
+        "type": "text",
+        "required": true
+      }
+    ]
+  },
+  {
+    "id": "a0000001-0001-0001-0001-000000000028b",
+    "type": "set_variable",
+    "label": "Set Attendee Name",
+    "order": 30,
+    "inputs": [
+      {
+        "name": "variable_name",
+        "value": "attendee_name",
+        "type": "text",
+        "required": true
+      },
+      {
+        "name": "variable_value",
+        "value": "{{current_attendee.name}}",
+        "type": "textarea",
+        "required": true
+      }
+    ]
+  },
+  {
+    "id": "a0000001-0001-0001-0001-000000000028c",
+    "type": "set_variable",
+    "label": "Set Attendee Email",
+    "order": 31,
+    "inputs": [
+      {
+        "name": "variable_name",
+        "value": "attendee_email",
+        "type": "text",
+        "required": true
+      },
+      {
+        "name": "variable_value",
+        "value": "{{current_attendee.email}}",
+        "type": "textarea",
+        "required": true
+      }
+    ]
+  },
+  {
+    "id": "a0000001-0001-0001-0001-000000000029",
+    "type": "invoke_agent",
+    "label": "👤 Run Person Profile Discovery Agent",
+    "order": 32,
+    "inputs": [
+      {
+        "name": "module",
+        "value": "o55io525ot317duj",
+        "type": "text",
+        "required": true
+      },
+      {
+        "name": "params",
+        "value": "full_name={{attendee_name}}\ncontact_email={{attendee_email}}\ncompany_context={{company_intelligence}}",
+        "type": "keyvalues",
+        "required": false,
+        "kv": {
+          "full_name": "{{attendee_name}}",
+          "contact_email": "{{attendee_email}}",
+          "company_context": "{{company_intelligence}}"
+        }
+      },
+      {
+        "name": "output_variable_name",
+        "value": "current_person_profile",
+        "type": "text",
+        "required": true
+      }
+    ],
+    "disabled": false
+  },
+  {
+    "id": "a0000001-0001-0001-0001-000000000030",
+    "type": "add_to_list",
+    "label": "Add Person Profile to List",
+    "order": 33,
+    "inputs": [
+      {
+        "name": "input_text",
+        "value": "{{current_person_profile}}",
+        "type": "text",
+        "required": true
+      },
+      {
+        "name": "output_variable_name",
+        "value": "external_person_profiles",
+        "type": "text",
+        "required": true
+      }
+    ]
+  },
+  {
+    "id": "a0000001-0001-0001-0001-000000000031",
+    "type": "end_condition",
+    "label": "End Parallel Attendee Loop",
+    "order": 34,
+    "inputs": []
+  },
+  {
+    "id": "a0000001-0001-0001-0001-000000000039a",
+    "type": "parallel_condition",
+    "label": "Parallel: Section Generation",
+    "order": 35,
+    "inputs": [
+      {
+        "name": "output_variable_name",
+        "value": "sections_parallel",
+        "type": "text",
+        "required": false
+      }
+    ]
+  },
+  {
+    "id": "a0000001-0001-0001-0001-000000000040",
+    "type": "invoke_llm",
+    "label": "📌 Section 1: At-a-Glance Overview",
+    "order": 36,
+    "inputs": [
+      {
+        "name": "llm_engine",
+        "value": "gpt-5-mini",
+        "type": "dropdown",
+        "required": true
+      },
+      {
+        "name": "instructions",
+        "value": "Generate the Header and At-a-Glance Overview section for the meeting prep document.\n\nThe user receiving this prep is: {{user.context.first_name}} {{user.context.last_name}}\n\nINPUT:\n<meeting>{{processed_gcal_event}}</meeting>\n<classification>{{meeting_classification}}</classification>\n<primary_contact>{{target_company_identity}}</primary_contact>\n<relationships>{{meeting_relationships}}</relationships>\n\n## VOICE GUIDELINES (from Agent.ai Brand Voice)\n\nWrite like a friendly expert briefing a colleague. The tone is warm, clear, curious, and human.\n\nDO:\n- Use contractions (you'll, don't, here's, it's)\n- Write conversationally, one-to-one\n- Explain the why, not just the what\n- Add small moments of delight\n- Be specific with facts and dates\n- Stay grounded but optimistic\n\nDON'T:\n- Corporate jargon (synergy, leverage, circle back, align, bandwidth)\n- Buzzwords (revolutionary, game-changing, cutting-edge, seamless)\n- Sarcasm or silliness\n- Condescension or talking down\n- Filler words (very, really, quite, just, actually)\n- Passive voice when active is clearer\n\nVIBE: \"Pull up a chair. Let's figure this out together.\"\n\n## FIXED LABELS (use exactly as written)\n\nThe output must use these exact labels:\n- \"Meeting type + duration\"\n- \"Primary contact\"\n- \"Conversation opener\"\n- \"TL;DR\"\n\n## CONTENT GUIDANCE\n\n1. Header info:\n   - title: \"[Company Name] + [Your Company]\" format\n   - tags: Array of 3-4 relevant tags (meeting type, duration, purpose keywords)\n   - objective: One warm sentence about what you want to accomplish\n\n2. Greeting: Personalized intro like \"Hi [First Name], here's a quick, focused prep to help you run a strong, confident sales call with [Company].\"\n\n3. Meeting type + duration: e.g., \"Product demo and discovery (30 mins)\"\n\n4. Primary contact: Format as \"Name — Title at Company\"\n\n5. Conversation opener: A specific, relevant opener based on recent signals. NO meta-instructions like \"(use verbatim)\". Just provide a natural opener they can use.\n\n6. TL;DR: One sentence summarizing what you want to learn and accomplish, written warmly. Example: \"Validate the challenges they're running into as they expand into new regions, show how our automation supports territory routing, and identify one or two quick wins we could deliver during a trial.\"\n\nOUTPUT (JSON):\n{\n  \"header\": {\n    \"title\": \"string ([Company] + [Your Company] format)\",\n    \"tags\": [\"string\", \"string\", \"string\"],\n    \"objective\": \"string (warm, human objective)\"\n  },\n  \"greeting\": \"string (personalized intro)\",\n  \"brief\": {\n    \"meeting_type_duration\": \"string\",\n    \"primary_contact\": \"string (Name — Title at Company)\",\n    \"conversation_opener\": \"string (specific and relevant, no meta-instructions)\",\n    \"tldr\": \"string (warm, human summary)\"\n  }\n}",
+        "type": "textarea",
+        "required": true
+      },
+      {
+        "name": "output_variable_name",
+        "value": "section_overview",
+        "type": "text",
+        "required": false
+      }
+    ]
+  },
+  {
+    "id": "a0000001-0001-0001-0001-000000000041",
+    "type": "invoke_llm",
+    "label": "👥 Section 2: Attendee Intel",
+    "order": 37,
+    "inputs": [
+      {
+        "name": "llm_engine",
+        "value": "gpt-5",
+        "type": "dropdown",
+        "required": true
+      },
+      {
+        "name": "instructions",
+        "value": "Generate the Who You're Meeting section for attendees.\n\nINPUT:\n<external_profiles>{{external_person_profiles}}</external_profiles>\n<internal_summary>{{internal_team_summary}}</internal_summary>\n<meeting_classification>{{meeting_classification}}</meeting_classification>\n\n## VOICE GUIDELINES (from Agent.ai Brand Voice)\n\nWrite like a friendly expert briefing a colleague. The tone is warm, clear, curious, and human.\n\nDO:\n- Use contractions (you'll, don't, here's, it's)\n- Write conversationally, one-to-one\n- Explain the why, not just the what\n- Add small moments of delight\n- Be specific with facts and dates\n- Stay grounded but optimistic\n\nDON'T:\n- Corporate jargon (synergy, leverage, circle back, align, bandwidth)\n- Buzzwords (revolutionary, game-changing, cutting-edge, seamless)\n- Sarcasm or silliness\n- Condescension or talking down\n- Filler words (very, really, quite, just, actually)\n- Passive voice when active is clearer\n\nVIBE: \"Pull up a chair. Let's figure this out together.\"\n\n## FIXED LABELS (use exactly as written)\n\nFor each attendee profile, use these exact field labels:\n- **Background:**\n- **What matters:**\n- **How they tend to show up:**\n- **Role in the decision:**\n- **Potential connection points:**\n- **Likely questions or pushback:**\n- **Conversation opener:**\n\nFor other attendees section:\n- **Other attendees to keep in mind:**\n- **Quick note for the opening:**\n\n## CONTENT GUIDANCE\n\nFor the PRIMARY CONTACT (most senior/important attendee):\n1. Name and title prominently displayed\n2. LinkedIn link if available\n3. Background: 2-3 sentences about professional history, keep it conversational\n4. What matters: Their priorities and what they care about\n5. How they tend to show up: Communication/decision style (analytical, skeptical, direct, etc.)\n6. Role in the decision: Their authority and influence (budget owner, final call, influencer)\n7. Potential connection points: Recent LinkedIn activity with specific dates if available\n8. Likely questions or pushback: Objections to anticipate, concerns they might raise\n9. Conversation opener: A specific opener tailored to this person\n\nFor OTHER ATTENDEES:\n- Brief bullet list with name, title, and one-line note about their perspective\n- Example: \"Jennifer Jones (Sales Manager, West Region) brings the end-user perspective.\"\n\nFor QUICK NOTE FOR THE OPENING:\n- Practical tip about confirming roles at the start of the call\n\nOUTPUT (JSON):\n{\n  \"primary_contact\": {\n    \"name\": \"string\",\n    \"title\": \"string\",\n    \"company\": \"string\",\n    \"linkedin_url\": \"string or null\",\n    \"background\": \"string (2-3 sentences, warm tone)\",\n    \"what_matters\": \"string\",\n    \"how_they_show_up\": \"string\",\n    \"role_in_decision\": \"string\",\n    \"connection_points\": \"string (with dates if available)\",\n    \"likely_pushback\": \"string\",\n    \"conversation_opener\": \"string\"\n  },\n  \"other_attendees\": [\n    {\"name\": \"string\", \"role_note\": \"string (title + brief perspective note)\"}\n  ],\n  \"opening_tip\": \"string (quick note for confirming roles)\"\n}",
+        "type": "textarea",
+        "required": true
+      },
+      {
+        "name": "output_variable_name",
+        "value": "section_attendees",
+        "type": "text",
+        "required": false
+      }
+    ]
+  },
+  {
+    "id": "a0000001-0001-0001-0001-000000000042",
+    "type": "invoke_llm",
+    "label": "🏢 Section 3: Company Intel",
+    "order": 38,
+    "inputs": [
+      {
+        "name": "llm_engine",
+        "value": "gpt-5-mini",
+        "type": "dropdown",
+        "required": true
+      },
+      {
+        "name": "instructions",
+        "value": "Generate the About the Company section (this appears inside Who You're Meeting).\n\nINPUT:\n<company_intelligence>{{company_intelligence}}</company_intelligence>\n<target_company>{{target_company_identity}}</target_company>\n<meeting_classification>{{meeting_classification}}</meeting_classification>\n\n## VOICE GUIDELINES (from Agent.ai Brand Voice)\n\nWrite like a friendly expert briefing a colleague. The tone is warm, clear, curious, and human.\n\nDO:\n- Use contractions (you'll, don't, here's, it's)\n- Write conversationally, one-to-one\n- Explain the why, not just the what\n- Add small moments of delight\n- Be specific with facts and dates\n- Stay grounded but optimistic\n\nDON'T:\n- Corporate jargon (synergy, leverage, circle back, align, bandwidth)\n- Buzzwords (revolutionary, game-changing, cutting-edge, seamless)\n- Sarcasm or silliness\n- Condescension or talking down\n- Filler words (very, really, quite, just, actually)\n- Passive voice when active is clearer\n\nVIBE: \"Pull up a chair. Let's figure this out together.\"\n\n## FIXED LABELS (use exactly as written)\n\n- **Company snapshot**\n- **Recent signals**\n- **What this signals**\n- **Where things are straining**\n- **How to frame the conversation**\n\n## CONTENT GUIDANCE\n\n1. Company snapshot: 2-3 sentences covering size, industry, what they do, key stats. Keep it conversational.\n   Example: \"Mid-market SaaS company doing roughly $45M in ARR, selling project management software to construction firms. Sales team of 45 across three regions.\"\n\n2. Recent signals: Bullet list of 2-4 recent events with source and date\n   Example: \"Announced a $30M Series B (TechCrunch, Jan 3)\"\n\n3. What this signals: Brief interpretation of what the signals mean\n   Example: \"Rapid expansion, fresh capital, and aggressive hiring goals.\"\n\n4. Where things are straining: Pain points or challenges they're likely facing\n   Example: \"Territory routing is breaking down as the team grows. Lead assignment is still manual.\"\n\n5. How to frame the conversation: Positioning advice for anchoring the discussion\n   Example: \"They're in hypergrowth, but their systems haven't caught up. Anchor around what works in the next 30 days.\"\n\nOUTPUT (JSON):\n{\n  \"company_name\": \"string\",\n  \"snapshot\": \"string (2-3 sentences, conversational)\",\n  \"recent_signals\": [\n    {\"signal\": \"string\", \"source\": \"string\", \"date\": \"string\"}\n  ],\n  \"what_this_signals\": \"string (interpretation)\",\n  \"where_things_strain\": \"string (pain points)\",\n  \"how_to_frame\": \"string (positioning advice)\"\n}",
+        "type": "textarea",
+        "required": true
+      },
+      {
+        "name": "output_variable_name",
+        "value": "section_company",
+        "type": "text",
+        "required": false
+      }
+    ]
+  },
+  {
+    "id": "a0000001-0001-0001-0001-000000000043",
+    "type": "invoke_llm",
+    "label": "🎯 Section 4: Strategy & Questions",
+    "order": 39,
+    "inputs": [
+      {
+        "name": "llm_engine",
+        "value": "gpt-5",
+        "type": "dropdown",
+        "required": true
+      },
+      {
+        "name": "instructions",
+        "value": "Generate the What to Know Going In and Questions & Tips sections.\n\nINPUT:\n<meeting_classification>{{meeting_classification}}</meeting_classification>\n<topic_signals>{{topic_signals}}</topic_signals>\n<relationships>{{meeting_relationships}}</relationships>\n<company>{{section_company}}</company>\n<attendees>{{section_attendees}}</attendees>\n\n## VOICE GUIDELINES (from Agent.ai Brand Voice)\n\nWrite like a friendly expert briefing a colleague. The tone is warm, clear, curious, and human.\n\nDO:\n- Use contractions (you'll, don't, here's, it's)\n- Write conversationally, one-to-one\n- Explain the why, not just the what\n- Add small moments of delight\n- Be specific with facts and dates\n- Stay grounded but optimistic\n\nDON'T:\n- Corporate jargon (synergy, leverage, circle back, align, bandwidth)\n- Buzzwords (revolutionary, game-changing, cutting-edge, seamless)\n- Sarcasm or silliness\n- Condescension or talking down\n- Filler words (very, really, quite, just, actually)\n- Passive voice when active is clearer\n\nVIBE: \"Pull up a chair. Let's figure this out together.\"\n\n## FIXED LABELS (use exactly as written)\n\nWhat to Know Going In section:\n- **Why they're here**\n- **Key insights**\n- **Where the opportunity is**\n- **Things to watch out for**\n\nQuestions & Tips section:\n- #### **Discovery questions to guide the conversation**\n- #### **Questions they're likely to ask**\n- #### **Conversation starters to help you steer**\n\n## CONTENT GUIDANCE\n\n1. Why they're here: Full explanation of what triggered this meeting, not just a label\n   Example: \"Inbound demo request after Marcus downloaded our Territory Management white paper.\"\n\n2. Key insights: 3-4 bullet points of the most important things to know\n   Be specific and actionable, not generic\n\n3. Where the opportunity is: One paragraph on the best angle to pursue\n   This will be displayed as a SUCCESS (green) highlight box in HTML\n\n4. Things to watch out for: One paragraph on risks and pitfalls to avoid\n   This will be displayed as a WARNING (orange) highlight box in HTML\n\n5. Discovery questions: 5-6 specific questions written as complete sentences\n   Frame as actual questions they could ask verbatim\n\n6. Questions they're likely to ask: 5-6 questions the prospect might ask\n   Include product, pricing, timeline, and reference questions\n\n7. Conversation starters: 2 starters to help redirect or steer conversation\n   Natural segues or recovery phrases\n\nOUTPUT (JSON):\n{\n  \"what_to_know\": {\n    \"why_here\": \"string (FULL explanation, not just a label)\",\n    \"key_insights\": [\"string\", \"string\", \"string\"],\n    \"opportunity\": \"string (for green highlight box)\",\n    \"watch_out\": \"string (for orange highlight box)\"\n  },\n  \"questions\": {\n    \"discovery\": [\"string\", \"string\", \"string\", \"string\", \"string\", \"string\"],\n    \"likely_questions\": [\"string\", \"string\", \"string\", \"string\", \"string\"],\n    \"conversation_starters\": [\"string\", \"string\"]\n  }\n}",
+        "type": "textarea",
+        "required": true
+      },
+      {
+        "name": "output_variable_name",
+        "value": "section_strategy",
+        "type": "text",
+        "required": false
+      }
+    ]
+  },
+  {
+    "id": "a0000001-0001-0001-0001-000000000044",
+    "type": "invoke_llm",
+    "label": "🏆 Section 5: Goals & Final Check",
+    "order": 40,
+    "inputs": [
+      {
+        "name": "llm_engine",
+        "value": "gpt-5-mini",
+        "type": "dropdown",
+        "required": true
+      },
+      {
+        "name": "instructions",
+        "value": "Generate the What Success Looks Like and Final Check sections.\n\nINPUT:\n<meeting_classification>{{meeting_classification}}</meeting_classification>\n<strategy>{{section_strategy}}</strategy>\n<meeting>{{processed_gcal_event}}</meeting>\n\n## VOICE GUIDELINES (from Agent.ai Brand Voice)\n\nWrite like a friendly expert briefing a colleague. The tone is warm, clear, curious, and human.\n\nDO:\n- Use contractions (you'll, don't, here's, it's)\n- Write conversationally, one-to-one\n- Explain the why, not just the what\n- Add small moments of delight\n- Be specific with facts and dates\n- Stay grounded but optimistic\n\nDON'T:\n- Corporate jargon (synergy, leverage, circle back, align, bandwidth)\n- Buzzwords (revolutionary, game-changing, cutting-edge, seamless)\n- Sarcasm or silliness\n- Condescension or talking down\n- Filler words (very, really, quite, just, actually)\n- Passive voice when active is clearer\n\nVIBE: \"Pull up a chair. Let's figure this out together.\"\n\n## FIXED LABELS (use exactly as written)\n\nWhat Success Looks Like section:\n- **Primary goal**\n- **Backup path**\n- **Quick wins you can offer**\n\nFinal Check section:\n- **What we still need to learn**\n- **Best path forward**\n- **Things to be mindful of**\n- **Logistics**\n- ### **Big picture takeaway**\n- ### **Best opportunity**\n- ### **Biggest risk**\n\n## SUMMARY BOX TYPES (for HTML)\n\nThese summary boxes have specific semantic colors:\n- Big picture takeaway: Muted gray (#F8FAFC background, #0064C7 label)\n- Best opportunity: Success green (#ECFDF5 background, #00C2A8 label)\n- Biggest risk: Warning peach (#FEF3EC background, #EF7B44 label)\n\n## CONTENT GUIDANCE\n\n1. Primary goal: Specific, actionable goal in warm, human language\n   GOOD: \"Align on a 30-day pilot with the West region team (15 users), with a clear success metric.\"\n   BAD: \"Secure agreement on a low-friction, timeboxed next step with clear owners.\"\n\n2. Backup path: What's plan B if primary doesn't work\n\n3. Quick wins: 3 specific offers or value-adds you can provide\n\n4. What we still need to learn: 3 info gaps to fill during the meeting\n\n5. Best path forward: One sentence recommendation\n\n6. Things to be mindful of: Risks or considerations\n\n7. Logistics: Always include these three:\n   - Confirm all attendees are on the call\n   - Have screen share ready\n   - Save five minutes at the end to align on next steps\n\n8. Big picture takeaway: One sentence summarizing the situation\n\n9. Best opportunity: One sentence on biggest upside\n\n10. Biggest risk: One sentence on main risk\n\n11. Closing: Warm, encouraging sign-off\n    Example: \"You've got this. Listen for what's breaking right now, focus the demo on what actually helps, and aim to lock in the pilot before you wrap.\"\n\nOUTPUT (JSON):\n{\n  \"success\": {\n    \"primary_goal\": \"string (warm, specific language)\",\n    \"backup_path\": \"string\",\n    \"quick_wins\": [\"string\", \"string\", \"string\"]\n  },\n  \"final_check\": {\n    \"what_to_learn\": [\"string\", \"string\", \"string\"],\n    \"best_path\": \"string\",\n    \"things_mindful\": \"string\",\n    \"logistics\": [\"string\", \"string\", \"string\"]\n  },\n  \"summary\": {\n    \"big_picture\": \"string\",\n    \"best_opportunity\": \"string\",\n    \"biggest_risk\": \"string\"\n  },\n  \"closing\": \"string (warm, encouraging)\"\n}",
+        "type": "textarea",
+        "required": true
+      },
+      {
+        "name": "output_variable_name",
+        "value": "section_goals",
+        "type": "text",
+        "required": false
+      }
+    ]
+  },
+  {
+    "id": "a0000001-0001-0001-0001-000000000044a",
+    "type": "end_parallel_condition",
+    "label": "End Parallel: Sections",
+    "order": 41,
+    "inputs": []
+  },
+  {
+    "id": "a0000001-0001-0001-0001-000000000045",
+    "type": "invoke_llm",
+    "label": "📄 Assemble Final Document",
+    "order": 42,
+    "inputs": [
+      {
+        "name": "llm_engine",
+        "value": "gpt-5",
+        "type": "dropdown",
+        "required": true
+      },
+      {
+        "name": "instructions",
+        "value": "Assemble all sections into a structured JSON object for HTML conversion.\n\nThe user receiving this prep is: {{user.context.first_name}} {{user.context.last_name}}\n\nINPUT SECTIONS:\n<overview>{{section_overview}}</overview>\n<attendees>{{section_attendees}}</attendees>\n<company>{{section_company}}</company>\n<strategy>{{section_strategy}}</strategy>\n<goals>{{section_goals}}</goals>\n<meeting>{{processed_gcal_event}}</meeting>\n<classification>{{meeting_classification}}</classification>\n\n## TASK\n\nCombine all section outputs into a single JSON object. Preserve all content from the input sections exactly as provided. The JSON structure must match the template variables used in the HTML conversion step.\n\n## REQUIRED STRUCTURE\n\nThe output must follow this exact structure with all fields populated from the input sections:\n\nOUTPUT (JSON):\n{\n  \"user_first_name\": \"string (from user context)\",\n  \"header\": {\n    \"title\": \"string (from section_overview.header.title)\",\n    \"tags\": [\"array from section_overview.header.tags\"],\n    \"objective\": \"string (from section_overview.header.objective)\"\n  },\n  \"greeting\": \"string (from section_overview.greeting)\",\n  \"brief\": {\n    \"meeting_type_duration\": \"string\",\n    \"primary_contact\": \"string\",\n    \"conversation_opener\": \"string\",\n    \"tldr\": \"string\"\n  },\n  \"attendees\": {\n    \"primary\": {\n      \"name\": \"string\",\n      \"title\": \"string\",\n      \"company\": \"string\",\n      \"linkedin_url\": \"string or null\",\n      \"background\": \"string\",\n      \"what_matters\": \"string\",\n      \"how_they_show_up\": \"string\",\n      \"role_in_decision\": \"string\",\n      \"connection_points\": \"string\",\n      \"likely_pushback\": \"string\",\n      \"conversation_opener\": \"string\"\n    },\n    \"others\": [{\"name\": \"string\", \"role_note\": \"string\"}],\n    \"opening_tip\": \"string\"\n  },\n  \"company\": {\n    \"name\": \"string\",\n    \"snapshot\": \"string\",\n    \"recent_signals\": [{\"signal\": \"string\", \"source\": \"string\", \"date\": \"string\"}],\n    \"what_this_signals\": \"string\",\n    \"where_things_strain\": \"string\",\n    \"how_to_frame\": \"string\"\n  },\n  \"what_to_know\": {\n    \"why_here\": \"string\",\n    \"key_insights\": [\"string\"],\n    \"opportunity\": \"string\",\n    \"watch_out\": \"string\"\n  },\n  \"questions\": {\n    \"discovery\": [\"string\"],\n    \"likely_questions\": [\"string\"],\n    \"conversation_starters\": [\"string\"]\n  },\n  \"success\": {\n    \"primary_goal\": \"string\",\n    \"backup_path\": \"string\",\n    \"quick_wins\": [\"string\"]\n  },\n  \"final_check\": {\n    \"what_to_learn\": [\"string\"],\n    \"best_path\": \"string\",\n    \"things_mindful\": \"string\",\n    \"logistics\": [\"string\"]\n  },\n  \"summary\": {\n    \"big_picture\": \"string\",\n    \"best_opportunity\": \"string\",\n    \"biggest_risk\": \"string\"\n  },\n  \"closing\": \"string\"\n}\n\nNOTES:\n- Output ONLY valid JSON, no markdown or explanation\n- Preserve all content exactly as provided by the section generation steps\n- Map fields from input sections to the output structure as indicated",
+        "type": "textarea",
+        "required": true
+      },
+      {
+        "name": "output_variable_name",
+        "value": "assembled_document",
+        "type": "text",
+        "required": false
+      }
+    ]
+  },
+  {
+    "id": "a0000001-0001-0001-0001-000000000046",
+    "type": "invoke_llm",
+    "label": "🎨 Convert to HTML Email",
+    "order": 43,
+    "inputs": [
+      {
+        "name": "llm_engine",
+        "value": "gpt-5",
+        "type": "dropdown",
+        "required": true
+      },
+      {
+        "name": "instructions",
+        "value": "Convert the assembled meeting prep JSON to HTML email format using the EXACT designer template.\n\nINPUT:\n<data>{{assembled_document}}</data>\n\n## DESIGN SPECIFICATIONS\n\n### Colors (use these exact values)\n- Primary (links, section labels): #0064C7\n- Success/Opportunity label: #00C2A8, background: #ECFDF5\n- Warning/Risk label: #EF7B44, background: #FEF3EC\n- Muted box: background #F8FAFC, label #0064C7\n- Page background: #F1F5F9\n- Card background: #FFFFFF\n- Header bar: #E8F1FB\n- Card border: #C1D6EB (1px solid, 14px radius)\n- Text primary: #0F172A\n- Text secondary: #475569\n- Divider: #E2E8F0\n- Avatar placeholder: #CBD5E1\n\n### Typography\n- Font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif\n- Section label: 12px, 700 weight, #0064C7\n- Meeting title: 28px, 700 weight, #0F172A\n- Field label: 14px, 600 weight, #0F172A\n- Field value: 14px, 400 weight, #475569\n- Profile name: 18px, 600 weight\n- Section intro: 13px, 400 weight, italic, #475569\n- Box label: 12px, 700 weight, uppercase, 0.5px letter-spacing\n- Box text: 15px, 400 weight, #0F172A\n\n### Card Structure\nEvery card follows this structure:\n1. Section header: background #E8F1FB, padding 14px 22px\n2. Section label: 12px, 700 weight, #0064C7\n3. Card body: background #FFFFFF, padding 24px 22px\n\n### Spacing\n- Container max-width: 640px\n- Page padding: 24px 16px\n- Card margin-bottom: 16px\n- Brief item margin-bottom: 18px\n- Profile field margin-bottom: 10px\n\n## FIXED SECTION LABELS (in blue header bars)\n\nCard 1: \"Meeting Prep\"\nCard 2: \"At-a-Glance Overview\"\nCard 3: \"Who You're Meeting\"\nCard 4: \"About the Company — [Company Name]\"\nCard 5: \"What to Know Going In\"\nCard 6: \"Questions & Tips\"\nCard 7: \"What Success Looks Like\"\nCard 8: \"Final Check Before the Call\"\n\n## HIGHLIGHT BOX STYLES\n\nOpportunity (mint green):\nbackground: #ECFDF5; padding: 16px 20px; border-radius: 8px;\nlabel: font-size: 12px; font-weight: 700; color: #00C2A8; text-transform: uppercase;\n\nRisk/Warning (peach):\nbackground: #FEF3EC; padding: 16px 20px; border-radius: 8px;\nlabel: font-size: 12px; font-weight: 700; color: #EF7B44; text-transform: uppercase;\n\nMuted (gray):\nbackground: #F8FAFC; padding: 16px 20px; border-radius: 8px;\nlabel: font-size: 12px; font-weight: 700; color: #0064C7; text-transform: uppercase;\n\n## 8-CARD STRUCTURE\n\nGenerate HTML with exactly 8 cards:\n\n1. Meeting Prep Header - title, tags, objective, greeting\n2. At-a-Glance Overview - meeting type, primary contact, opener, TL;DR\n3. Who You're Meeting - primary attendee profile with all fields, other attendees box\n4. About the Company - snapshot, signals, interpretation, pain points, framing\n5. What to Know Going In - why here, key insights, opportunity box (green), risk box (orange)\n6. Questions & Tips - discovery questions, likely questions, conversation starters\n7. What Success Looks Like - primary goal, backup path, quick wins\n8. Final Check - what to learn, best path, logistics, summary boxes (big picture/gray, opportunity/green, risk/orange), closing\n\n## FIELD LABEL MAPPING (use these exact labels when rendering)\n\nAttendee Profile fields:\n- background -> \"Background:\"\n- what_matters -> \"What matters:\"\n- how_they_show_up -> \"How they tend to show up:\"\n- role_in_decision -> \"Role in the decision:\"\n- connection_points -> \"Potential connection points:\"\n- likely_pushback -> \"Likely questions or pushback:\"\n- conversation_opener -> \"Conversation opener:\"\n\nCompany fields:\n- snapshot -> \"Company snapshot\"\n- recent_signals -> \"Recent signals\"\n- what_this_signals -> \"What this signals\"\n- where_things_strain -> \"Where things are straining\"\n- how_to_frame -> \"How to frame the conversation\"\n\nWhat to Know fields:\n- why_here -> \"Why they're here\"\n- key_insights -> \"Key insights\"\n- opportunity -> \"Where the opportunity is\"\n- watch_out -> \"Things to watch out for\"\n\nQuestions fields:\n- discovery -> \"Discovery questions to guide the conversation\"\n- likely_questions -> \"Questions they're likely to ask\"\n- conversation_starters -> \"Conversation starters to help you steer\"\n\nFinal Check fields:\n- what_to_learn -> \"What we still need to learn\"\n- best_path -> \"Best path forward\"\n- things_mindful -> \"Things to be mindful of\"\n- logistics -> \"Logistics\"\n\nSummary fields:\n- big_picture -> \"Big picture takeaway\"\n- best_opportunity -> \"Best opportunity\"\n- biggest_risk -> \"Biggest risk\"\n\n## OUTPUT REQUIREMENTS\n\n1. Return ONLY valid HTML, no markdown or explanation\n2. All styles must be inline (email compatibility)\n3. Use table-based layout for email clients\n4. Include Google Fonts link for Inter\n5. Replace ALL placeholders with actual data from input JSON\n6. Avatar should be 56px gray circle placeholder (#CBD5E1)\n7. Keep total HTML under 50KB\n\nReturn the complete HTML document.",
+        "type": "textarea",
+        "required": true
+      },
+      {
+        "name": "output_variable_name",
+        "value": "results_body",
+        "type": "text",
+        "required": false
+      }
+    ]
+  },
+  {
+    "id": "a0000001-0001-0001-0001-000000000035",
+    "type": "output_formatter",
+    "label": "Show User Output",
+    "order": 44,
+    "inputs": [
+      {
+        "name": "heading",
+        "value": "Meeting Prep Document",
+        "type": "text",
+        "required": false
+      },
+      {
+        "name": "output_formatted",
+        "value": "{{results_body}}",
+        "type": "textarea",
+        "required": true
+      },
+      {
+        "name": "format",
+        "value": "html",
+        "type": "dropdown",
+        "required": true
+      }
+    ]
+  },
+  {
+    "id": "a0000001-0001-0001-0001-000000000036",
+    "type": "send_message",
+    "label": "Send Email",
+    "order": 45,
+    "inputs": [
+      {
+        "name": "type",
+        "value": "email",
+        "type": "dropdown",
+        "required": true
+      },
+      {
+        "name": "to",
+        "value": "current_user",
+        "type": "dropdown",
+        "required": true
+      },
+      {
+        "name": "email_addresses",
+        "value": "",
+        "type": "textarea",
+        "required": false
+      },
+      {
+        "name": "subject",
+        "value": "{{results_subject_line}}",
+        "type": "text",
+        "required": false
+      },
+      {
+        "name": "output_formatted",
+        "value": "{{results_body}}",
+        "type": "textarea",
+        "required": true
+      }
+    ]
+  }
+]

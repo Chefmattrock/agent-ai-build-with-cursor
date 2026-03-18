@@ -1,0 +1,112 @@
+[
+  {
+    "id": "11111111-e29b-41d4-a716-446655440000",
+    "type": "get_user_input",
+    "label": "Get Topic",
+    "order": 0,
+    "inputs": [
+      {
+        "name": "input_type",
+        "value": "text",
+        "type": "dropdown",
+        "required": true
+      },
+      {
+        "name": "input_description",
+        "value": "Enter a tech topic to summarize (e.g., 'Artificial Intelligence', 'Cybersecurity'):",
+        "type": "text",
+        "required": true
+      },
+      {
+        "name": "required",
+        "value": true,
+        "type": "checkbox",
+        "required": false
+      },
+      {
+        "name": "input_name",
+        "value": "news_topic",
+        "type": "text",
+        "required": true
+      }
+    ]
+  },
+  {
+    "id": "22222222-e29b-41d4-a716-446655440000",
+    "type": "get_google_news",
+    "label": "Fetch Recent News",
+    "order": 1,
+    "inputs": [
+      {
+        "name": "query",
+        "value": "{{news_topic}}",
+        "type": "text",
+        "required": true
+      },
+      {
+        "name": "date_range",
+        "value": "24h",
+        "type": "dropdown",
+        "required": true
+      },
+      {
+        "name": "output_variable_name",
+        "value": "raw_news_data",
+        "type": "text",
+        "required": true
+      }
+    ]
+  },
+  {
+    "id": "33333333-e29b-41d4-a716-446655440000",
+    "type": "invoke_llm",
+    "label": "Summarize News",
+    "order": 2,
+    "inputs": [
+      {
+        "name": "llm_engine",
+        "value": "gpt-5-mini",
+        "type": "dropdown",
+        "required": true
+      },
+      {
+        "name": "instructions",
+        "value": "You are a tech news editor. Analyze the following news data about '{{news_topic}}' and create a concise summary.\n\nRequirements:\n1. Identify the top 3 most important stories.\n2. For each story, provide a headline and a 2-sentence summary.\n3. Add a 'Key Takeaway' section at the bottom synthesizing the general sentiment.\n\nNews Data:\n{{raw_news_data}}",
+        "type": "textarea",
+        "required": true
+      },
+      {
+        "name": "output_variable_name",
+        "value": "news_summary",
+        "type": "text",
+        "required": false
+      }
+    ]
+  },
+  {
+    "id": "44444444-e29b-41d4-a716-446655440000",
+    "type": "output_formatter",
+    "label": "Display Summary",
+    "order": 3,
+    "inputs": [
+      {
+        "name": "heading",
+        "value": "Daily Tech Digest: {{news_topic}}",
+        "type": "text",
+        "required": false
+      },
+      {
+        "name": "output_formatted",
+        "value": "{{news_summary}}",
+        "type": "textarea",
+        "required": true
+      },
+      {
+        "name": "format",
+        "value": "markdown",
+        "type": "dropdown",
+        "required": true
+      }
+    ]
+  }
+]

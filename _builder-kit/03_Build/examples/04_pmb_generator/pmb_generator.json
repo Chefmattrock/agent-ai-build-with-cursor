@@ -1,0 +1,234 @@
+[
+  {
+    "id": "pmb00001-0001-0001-0001-000000000001",
+    "type": "get_user_input",
+    "label": "Agent Information",
+    "order": 0,
+    "inputs": [
+      {
+        "name": "input_type",
+        "value": "textarea",
+        "type": "dropdown",
+        "required": true
+      },
+      {
+        "name": "input_description",
+        "value": "Describe what your agent does, who it's for, and the problem it solves:",
+        "type": "text",
+        "required": true
+      },
+      {
+        "name": "required",
+        "value": true,
+        "type": "checkbox",
+        "required": false
+      },
+      {
+        "name": "input_name",
+        "value": "agent_info",
+        "type": "text",
+        "required": true
+      }
+    ]
+  },
+  {
+    "id": "pmb00001-0001-0001-0001-000000000002",
+    "type": "get_user_input",
+    "label": "Agent PRD",
+    "order": 1,
+    "inputs": [
+      {
+        "name": "input_type",
+        "value": "textarea",
+        "type": "dropdown",
+        "required": true
+      },
+      {
+        "name": "input_description",
+        "value": "Paste the agent's PRD (Product Requirements Document):",
+        "type": "text",
+        "required": true
+      },
+      {
+        "name": "required",
+        "value": true,
+        "type": "checkbox",
+        "required": false
+      },
+      {
+        "name": "input_name",
+        "value": "agent_prd",
+        "type": "text",
+        "required": true
+      }
+    ]
+  },
+  {
+    "id": "pmb00001-0001-0001-0001-000000000003",
+    "type": "get_user_input",
+    "label": "Agent JSON Configuration",
+    "order": 2,
+    "inputs": [
+      {
+        "name": "input_type",
+        "value": "textarea",
+        "type": "dropdown",
+        "required": true
+      },
+      {
+        "name": "input_description",
+        "value": "Paste the agent's JSON configuration:",
+        "type": "text",
+        "required": true
+      },
+      {
+        "name": "required",
+        "value": true,
+        "type": "checkbox",
+        "required": false
+      },
+      {
+        "name": "input_name",
+        "value": "agent_json",
+        "type": "text",
+        "required": true
+      }
+    ]
+  },
+  {
+    "id": "pmb00001-0001-0001-0001-000000000004",
+    "type": "invoke_llm",
+    "label": "Generate PMB",
+    "order": 3,
+    "inputs": [
+      {
+        "name": "llm_engine",
+        "value": "gpt-5",
+        "type": "dropdown",
+        "required": true
+      },
+      {
+        "name": "instructions",
+        "value": "You are a product marketing expert creating a Product Marketing Brief (PMB) for an Agent.ai agent.\n\n## BRAND VOICE\nAgent.ai's voice is warm, clear, and quietly confident — the voice of a friendly expert who wants you to feel capable. The tone is conversational, curious, and lightly witty — never snarky, never salesy, never corporate.\n\n## INPUTS\n\n### Agent Description\n{{agent_info}}\n\n### Agent PRD\n{{agent_prd}}\n\n### Agent JSON Configuration\n{{agent_json}}\n\n## MARKETING FRAMEWORKS\n\n### Hell Island / Heaven Island\nPosition the transformation your agent provides:\n- Hell Island: The painful current state before the agent (time wasted, frustration, risk, negative emotions)\n- Heaven Island: The transformed state after using the agent (time saved, relief, safety, positive emotions)\n- The Bridge: How the agent creates this transformation\n\n### Current Workarounds\nIdentify what people do today instead:\n- Manual process: Time cost, error rate, inconsistency\n- Hire someone: Money cost, training time, quality issues\n- Use inferior tools: Limitations, frustrations, workarounds\n- Skip it entirely: Consequences, missed opportunities\n\n### Video Structure\n- Hook (0-5s): Pattern interrupt or curiosity gap that stops the scroll\n- Bumper (5-10s): What they'll learn or see\n- Content (10-60s): Demo the transformation, show the before/after\n\n### AEO (Answer Engine Optimization)\n- Questions the agent answers for AI search engines\n- Natural language queries users might ask\n- How to show up in Perplexity, ChatGPT, etc.\n\n## OUTPUT STRUCTURE\n\n### 1. Core Product Info\n- Agent name\n- One-line description\n- Target user profile\n- Key capabilities (3-5 bullets)\n\n### 2. Positioning: Hell Island vs Heaven Island\n- Hell Island description (2-3 sentences)\n- Heaven Island description (2-3 sentences)\n- The Bridge (1-2 sentences)\n\n### 3. Technical Context\n- Key actions used and their purpose\n- Integrations (HubSpot, LinkedIn, etc.)\n- What makes this agent technically unique\n\n### 4. Marketing Ammunition\n- Primary pain points (lead with these)\n- Benefit statements with proof\n- Before/after comparison\n- Current workarounds and their costs\n\n### 5. Content Hooks\n- Video script (hook, bumper, content, CTA)\n- 3 blog/article angles\n- LinkedIn post template\n- Twitter/X thread opener\n\n### 6. SEO & AEO Strategy\n- Primary keywords\n- Questions this agent answers\n- Search intent mapping\n\nGenerate a complete PMB following this structure.",
+        "type": "textarea",
+        "required": true
+      },
+      {
+        "name": "output_variable_name",
+        "value": "pmb_content",
+        "type": "text",
+        "required": true
+      }
+    ]
+  },
+  {
+    "id": "pmb00001-0001-0001-0001-000000000005",
+    "type": "invoke_llm",
+    "label": "Extract Agent Name",
+    "order": 4,
+    "inputs": [
+      {
+        "name": "llm_engine",
+        "value": "gpt-5-nano",
+        "type": "dropdown",
+        "required": true
+      },
+      {
+        "name": "instructions",
+        "value": "Extract just the agent name from this description. Return only the name, nothing else:\n\n{{agent_info}}",
+        "type": "textarea",
+        "required": true
+      },
+      {
+        "name": "output_variable_name",
+        "value": "agent_name",
+        "type": "text",
+        "required": true
+      }
+    ]
+  },
+  {
+    "id": "pmb00001-0001-0001-0001-000000000006",
+    "type": "invoke_llm",
+    "label": "Format as Markdown",
+    "order": 5,
+    "inputs": [
+      {
+        "name": "llm_engine",
+        "value": "gpt-5-mini",
+        "type": "dropdown",
+        "required": true
+      },
+      {
+        "name": "instructions",
+        "value": "Format the following PMB content as clean markdown with proper headers (# for h1, ## for h2, etc.), bullet points, and tables where appropriate:\n\n{{pmb_content}}",
+        "type": "textarea",
+        "required": true
+      },
+      {
+        "name": "output_variable_name",
+        "value": "formatted_pmb",
+        "type": "text",
+        "required": true
+      }
+    ]
+  },
+  {
+    "id": "pmb00001-0001-0001-0001-000000000007",
+    "type": "save_to_google_doc",
+    "label": "Save PMB to Google Doc",
+    "order": 6,
+    "inputs": [
+      {
+        "name": "title",
+        "value": "PMB: {{agent_name}}",
+        "type": "text",
+        "required": true
+      },
+      {
+        "name": "content",
+        "value": "{{formatted_pmb}}",
+        "type": "textarea",
+        "required": true
+      },
+      {
+        "name": "folder_id",
+        "value": "",
+        "type": "text",
+        "required": false
+      },
+      {
+        "name": "output_variable_name",
+        "value": "google_doc_url",
+        "type": "text",
+        "required": true
+      }
+    ]
+  },
+  {
+    "id": "pmb00001-0001-0001-0001-000000000008",
+    "type": "output_formatter",
+    "label": "Display Result",
+    "order": 7,
+    "inputs": [
+      {
+        "name": "heading",
+        "value": "Your PMB is Ready!",
+        "type": "text",
+        "required": false
+      },
+      {
+        "name": "output_formatted",
+        "value": "Your Product Marketing Brief has been created and saved to Google Docs.\n\n**Google Doc:** {{google_doc_url}}\n\n---\n\n{{formatted_pmb}}",
+        "type": "textarea",
+        "required": true
+      },
+      {
+        "name": "format",
+        "value": "markdown",
+        "type": "dropdown",
+        "required": true
+      }
+    ]
+  }
+]
