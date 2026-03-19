@@ -2,6 +2,8 @@
 
 > Documentation for building Knowledge Agents (Hubs) on Agent.AI
 
+> **Authoritative source:** When generating or validating agent JSON, always follow `_builder-kit/03_Build/LLMs.txt` first. It contains the official Agent.AI action schema directly from the platform. The reference below provides context and examples, but LLMs.txt is the source of truth for action types, input fields, and valid values.
+
 ---
 
 ## Table of Contents

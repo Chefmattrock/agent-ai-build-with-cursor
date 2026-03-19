@@ -8,12 +8,10 @@
 
 | Standard | Purpose | Question |
 |----------|---------|----------|
-| **{{ BASELINE_STANDARD_NAME }}** | Baseline quality | Does it work? Is it safe? Is it unique? |
-| **{{ PREMIUM_STANDARD_NAME }}** | Premium designation | Does it *delight* and drive retention? |
+| **URS** | Baseline quality | Does it work? Is it safe? Is it unique? |
+| **RAVE** | Premium designation | Does it *delight* and drive retention? |
 
-All public agents must pass `{{ BASELINE_STANDARD_NAME }}`. Premium agents must also pass `{{ PREMIUM_STANDARD_NAME }}`.
-
-*Tip: You can keep "URS" and "RAVE" as your standard names, or rename them to match your organization's language.*
+All public agents must pass URS, Usable, Remarkable and Safe. Premium agents must also pass RAVE.
 
 ---
 
@@ -36,11 +34,9 @@ The agent must solve a real problem for your target users with clear, immediate 
 | **Minimal setup** | Useful results without configuration or training |
 | **Low input, high value** | First run delivers value without asking for too much |
 
-**Pass Example:** {{ RELEVANT_PASS_EXAMPLE }}
-*(Example: "Meeting Prep" — user enters a meeting link, gets a briefing in 2 minutes.)*
+**Pass Example:** "Meeting Prep" — user enters a meeting link, gets a briefing in 2 minutes.
 
-**Fail Example:** {{ RELEVANT_FAIL_EXAMPLE }}
-*(Example: "Universal Data Processor" — unclear purpose, requires configuration to be useful.)*
+**Fail Example:** "Universal Data Processor" — unclear purpose, requires configuration to be useful.
 
 ---
 
@@ -54,11 +50,9 @@ The agent must deliver unique value with every run and solve recurring friction.
 | **Recurring friction** | Solves a daily or weekly need, not occasional |
 | **Drives next action** | Output tells the user what to do next |
 
-**Pass Example:** {{ ACTIONABLE_PASS_EXAMPLE }}
-*(Example: "Daily Sales Digest" — run every morning, tells you which deals need attention today.)*
+**Pass Example:** "Daily Sales Digest" — run every morning, tells you which deals need attention today.
 
-**Fail Example:** {{ ACTIONABLE_FAIL_EXAMPLE }}
-*(Example: "Company Name Generator" — useful once, not recurring value.)*
+**Fail Example:** "Company Name Generator" — useful once, not recurring value.
 
 ---
 
@@ -84,11 +78,9 @@ The agent must perform as promised with consistent, reliable outputs. This is ab
 
 If most are green → V is achievable. If too many are red → narrow scope or reconsider.
 
-**Pass Example:** {{ VALIDATED_PASS_EXAMPLE }}
-*(Example: Agent tested with 50+ real users across typical variations, 4.5+ star rating, consistent output quality.)*
+**Pass Example:** Agent tested with 50+ real users across typical variations, 4.5+ star rating, consistent output quality.
 
-**Fail Example:** {{ VALIDATED_FAIL_EXAMPLE }}
-*(Example: Works in demo but breaks with real-world edge cases.)*
+**Fail Example:** Works in demo but breaks with real-world edge cases — "every case is different."
 
 ---
 
@@ -98,18 +90,14 @@ The agent must fit into existing workflows without requiring new habits.
 
 | Criterion | What It Means |
 |-----------|---------------|
-| **Fits existing workflow** | Integrates with tools your users already use |
+| **Fits existing workflow** | Integrates with email, CRM, calendar, etc. |
 | **Supports current habits** | Doesn't require users to change how they work |
 | **Trigger-ready** | Can be automated or integrated with existing tools |
-| **Tech stack compatible** | Works with {{ USER_TECH_STACK }} |
+| **Tech stack compatible** | Works with common SMB tools (Google Workspace, HubSpot, etc.) |
 
-*(Example: "common tools like Google Workspace, HubSpot, Slack")*
+**Pass Example:** "Meeting Prep" triggered automatically when a calendar event is created.
 
-**Pass Example:** {{ EVERGREEN_PASS_EXAMPLE }}
-*(Example: "Meeting Prep" triggered automatically when a calendar event is created.)*
-
-**Fail Example:** {{ EVERGREEN_FAIL_EXAMPLE }}
-*(Example: Requires user to remember to run it manually every time.)*
+**Fail Example:** Requires user to remember to run it manually every time.
 
 ---
 
@@ -153,14 +141,12 @@ For each criterion, score 0–2:
 | 1 | Partially meets criterion |
 | 2 | Fully meets criterion |
 
-**Premium threshold:** {{ PREMIUM_SCORE_THRESHOLD }} out of 16 total points, with no 0s.
-
-*(Default: 12+ out of 16)*
+**Premium threshold:** 12+ out of 16 total points, with no 0s.
 
 ---
 
 ## Examples by Persona
-
+* Fill in this section after creating your personas *
 ### {{ PERSONA_1_NAME }} — Premium Agent
 
 **"{{ PERSONA_1_EXAMPLE_AGENT }}"**

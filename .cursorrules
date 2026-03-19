@@ -101,7 +101,8 @@ Design the action workflow:
 **Quality Check:** Low input, high value output on first run?
 
 ### Key Files
-- `03_Build/Workflow_Agent_Reference.md` — Action-based agent guide
+- `03_Build/LLMs.txt` — **Authoritative source.** Official Agent.AI action schema. Always follow this when generating or validating JSON — action types, input fields, and valid values defined here take precedence over all other references.
+- `03_Build/Workflow_Agent_Reference.md` — Action-based agent guide (context and examples)
 - `03_Build/Knowledge_Agent_Reference.md` — RAG/knowledge agent guide
 - `03_Build/examples/` — Real-world patterns
 

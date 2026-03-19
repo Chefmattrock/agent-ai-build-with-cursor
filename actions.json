@@ -1,0 +1,234 @@
+[
+  {
+    "id": "a1b2c3d4-0001-4e5f-a678-000000000001",
+    "type": "get_user_input",
+    "label": "Get Available Equipment",
+    "order": 0,
+    "inputs": [
+      {
+        "name": "input_type",
+        "value": "text",
+        "type": "dropdown",
+        "required": true
+      },
+      {
+        "name": "input_description",
+        "value": "What equipment do you have access to today? (e.g. just a climbing wall, hangboard, campus board, resistance bands, pull-up bar, weights — or none at all)",
+        "type": "text",
+        "required": true
+      },
+      {
+        "name": "required",
+        "value": true,
+        "type": "checkbox",
+        "required": false
+      },
+      {
+        "name": "input_name",
+        "value": "equipment",
+        "type": "text",
+        "required": true
+      }
+    ]
+  },
+  {
+    "id": "a1b2c3d4-0002-4e5f-a678-000000000002",
+    "type": "get_user_input",
+    "label": "Get Area of Weakness",
+    "order": 1,
+    "inputs": [
+      {
+        "name": "input_type",
+        "value": "text",
+        "type": "dropdown",
+        "required": true
+      },
+      {
+        "name": "input_description",
+        "value": "What's your biggest weakness in climbing right now? (e.g. finger strength, footwork, endurance, overhangs, slab, body tension, mental game — be as specific as you like)",
+        "type": "text",
+        "required": true
+      },
+      {
+        "name": "required",
+        "value": true,
+        "type": "checkbox",
+        "required": false
+      },
+      {
+        "name": "input_name",
+        "value": "weakness",
+        "type": "text",
+        "required": true
+      }
+    ]
+  },
+  {
+    "id": "a1b2c3d4-0003-4e5f-a678-000000000003",
+    "type": "invoke_llm",
+    "label": "Generate Draft Workout",
+    "order": 2,
+    "inputs": [
+      {
+        "name": "llm_engine",
+        "value": "gpt-5-mini",
+        "type": "dropdown",
+        "required": true
+      },
+      {
+        "name": "instructions",
+        "value": "You are an expert rock climbing coach. Your job is to create a structured, personalized 30-minute training session for a climber based on the two inputs below.\n\nEquipment available: {{equipment}}\nArea of weakness: {{weakness}}\n\nDesign a workout that:\n1. Fits exactly within 30 minutes (include approximate time for each section)\n2. Directly targets the climber's stated weakness in the main block\n3. Includes exercises and drills that are achievable with only the equipment they listed — do not suggest anything that requires gear they don't have\n4. Also incorporates 1-2 broadly beneficial climbing exercises (e.g. antagonist training, core, or technique drills) that complement the weakness focus\n5. Follows this structure:\n   - **Warm-Up** (5 min): Light movement and joint prep\n   - **Weakness Focus** (15 min): 2-3 targeted exercises or drills with sets, reps, or duration\n   - **Climbing Conditioning** (7 min): 1-2 general climbing-benefit exercises\n   - **Cool-Down & Mobility** (3 min): Stretching focused on the muscles used\n\nFor each exercise, include:\n- Name of the exercise\n- Brief description of how to do it\n- Sets/reps/duration\n- A one-line tip on what to focus on mentally or physically\n\nTone: friendly, encouraging, and direct — like a coach who knows their stuff and wants you to succeed. Avoid jargon unless you briefly explain it.",
+        "type": "textarea",
+        "required": true
+      },
+      {
+        "name": "output_variable_name",
+        "value": "draft_workout",
+        "type": "text",
+        "required": false
+      }
+    ]
+  },
+  {
+    "id": "a1b2c3d4-0004-4e5f-a678-000000000004",
+    "type": "output_formatter",
+    "label": "Show Draft Workout",
+    "order": 3,
+    "inputs": [
+      {
+        "name": "heading",
+        "value": "Here's your draft workout — take a look!",
+        "type": "text",
+        "required": false
+      },
+      {
+        "name": "output_formatted",
+        "value": "{{draft_workout}}",
+        "type": "textarea",
+        "required": true
+      },
+      {
+        "name": "format",
+        "value": "markdown",
+        "type": "dropdown",
+        "required": true
+      }
+    ]
+  },
+  {
+    "id": "a1b2c3d4-0005-4e5f-a678-000000000005",
+    "type": "get_user_input",
+    "label": "Collect Feedback",
+    "order": 4,
+    "inputs": [
+      {
+        "name": "input_type",
+        "value": "text",
+        "type": "dropdown",
+        "required": true
+      },
+      {
+        "name": "input_description",
+        "value": "Any tweaks? Tell me what to change — or just say 'looks good' and I'll finalize it and send it to your email.",
+        "type": "text",
+        "required": true
+      },
+      {
+        "name": "required",
+        "value": true,
+        "type": "checkbox",
+        "required": false
+      },
+      {
+        "name": "input_name",
+        "value": "user_feedback",
+        "type": "text",
+        "required": true
+      }
+    ]
+  },
+  {
+    "id": "a1b2c3d4-0006-4e5f-a678-000000000006",
+    "type": "invoke_llm",
+    "label": "Finalize Workout with Feedback",
+    "order": 5,
+    "inputs": [
+      {
+        "name": "llm_engine",
+        "value": "gpt-5-mini",
+        "type": "dropdown",
+        "required": true
+      },
+      {
+        "name": "instructions",
+        "value": "You are an expert rock climbing coach. You previously generated a draft workout plan for a climber and they have provided feedback.\n\nOriginal inputs:\n- Equipment available: {{equipment}}\n- Area of weakness: {{weakness}}\n\nDraft workout:\n{{draft_workout}}\n\nUser feedback:\n{{user_feedback}}\n\nIf the feedback says something like 'looks good', 'perfect', 'send it', or expresses approval with no changes requested, return the draft workout exactly as-is.\n\nIf the feedback requests changes, revise the workout accordingly while keeping the same structure:\n   - **Warm-Up** (5 min)\n   - **Weakness Focus** (15 min)\n   - **Climbing Conditioning** (7 min)\n   - **Cool-Down & Mobility** (3 min)\n\nFor each exercise always include: name, description, sets/reps/duration, and a one-line focus tip.\n\nReturn only the final workout plan — no preamble, no explanation of what you changed.",
+        "type": "textarea",
+        "required": true
+      },
+      {
+        "name": "output_variable_name",
+        "value": "final_workout",
+        "type": "text",
+        "required": false
+      }
+    ]
+  },
+  {
+    "id": "a1b2c3d4-0007-4e5f-a678-000000000007",
+    "type": "send_message",
+    "label": "Email Final Workout",
+    "order": 6,
+    "inputs": [
+      {
+        "name": "type",
+        "value": "email",
+        "type": "dropdown",
+        "required": true
+      },
+      {
+        "name": "to",
+        "value": "current_user",
+        "type": "dropdown",
+        "required": true
+      },
+      {
+        "name": "subject",
+        "value": "Your 30-Minute Climbing Workout",
+        "type": "text",
+        "required": false
+      },
+      {
+        "name": "output_formatted",
+        "value": "{{final_workout}}",
+        "type": "textarea",
+        "required": true
+      }
+    ]
+  },
+  {
+    "id": "a1b2c3d4-0008-4e5f-a678-000000000008",
+    "type": "output_formatter",
+    "label": "Display Final Workout",
+    "order": 7,
+    "inputs": [
+      {
+        "name": "heading",
+        "value": "Your 30-Minute Climbing Workout",
+        "type": "text",
+        "required": false
+      },
+      {
+        "name": "output_formatted",
+        "value": "{{final_workout}}\n\n---\n✅ This workout has been sent to your email.",
+        "type": "textarea",
+        "required": true
+      },
+      {
+        "name": "format",
+        "value": "markdown",
+        "type": "dropdown",
+        "required": true
+      }
+    ]
+  }
+]
