@@ -1,7 +1,5 @@
 # Agent Naming & Description Guidelines
 
-> **SETUP REQUIRED:** Replace every `{{ placeholder }}` with your own examples and platform-specific conventions. See `CUSTOMIZE.md` for guidance. The core principles and structure are ready to use as-is.
-
 This guide covers how to name your agent and write a compelling description that helps users find and understand what it does.
 
 ---
@@ -21,9 +19,7 @@ Your users are non-technical. Skip jargon, acronyms, and insider terms.
 Think about what users would type when searching. Make your name match their mental model.
 
 ### 5. Consistency Across Platform
-Follow {{ PLATFORM_NAME }} patterns so your agent fits naturally alongside others.
-
-*(Replace `{{ PLATFORM_NAME }}` with your platform's name, e.g. "Agent.ai", "your marketplace", etc.)*
+Follow Agent.ai patterns so your agent fits naturally alongside others.
 
 ---
 
@@ -37,13 +33,12 @@ Follow {{ PLATFORM_NAME }} patterns so your agent fits naturally alongside other
 
 | Name | Why It Works |
 |------|--------------|
-| {{ NAMING_EXAMPLE_1 }} | {{ NAMING_EXAMPLE_1_WHY }} |
-| {{ NAMING_EXAMPLE_2 }} | {{ NAMING_EXAMPLE_2_WHY }} |
-| {{ NAMING_EXAMPLE_3 }} | {{ NAMING_EXAMPLE_3_WHY }} |
-| {{ NAMING_EXAMPLE_4 }} | {{ NAMING_EXAMPLE_4_WHY }} |
-| {{ NAMING_EXAMPLE_5 }} | {{ NAMING_EXAMPLE_5_WHY }} |
-
-*(Fill these in with real examples from your agent catalog or target domain. Generic reference examples: "Meeting Prep", "Lead Scoring", "SEO Audit", "Sales Email Writer")*
+| **Meeting Prep** | Clear outcome (prep) + clear domain (meetings) |
+| **Lead Scoring** | Clear task (scoring) + clear subject (leads) |
+| **SEO Audit** | Clear domain (SEO) + clear task (audit) |
+| **Customer Research** | Clear subject (customer) + clear task (research) |
+| **Sales Email Writer** | Clear domain (sales email) + clear role (writer) |
+| **Inbox Triage** | Clear subject (inbox) + clear task (triage) |
 
 ### Optional Qualifiers
 
@@ -76,7 +71,7 @@ Before finalizing your name, confirm:
 - [ ] Is it instantly clear what this agent does?
 - [ ] Is the most important keyword first?
 - [ ] Would a non-technical user understand it?
-- [ ] Is it short (2–4 words)?
+- [ ] Is it short (2-4 words)?
 - [ ] Is it scannable in a list?
 - [ ] Would users search for these words?
 - [ ] Does it avoid filler words (AI, Smart, Auto, Magic)?
@@ -96,7 +91,7 @@ Start with the benefit, not the mechanics. Tell users what they'll get, then exp
 
 ### Keep It Short
 
-Aim for 1–2 sentences + optional bullets. Users skim.
+Aim for 1-2 sentences + optional bullets. Users skim.
 
 **Structure:**
 ```
@@ -116,10 +111,8 @@ Write like you're explaining to a smart friend who doesn't work in tech.
 | Instead of... | Say... |
 |---------------|--------|
 | "Leverages NLP capabilities" | "Reads and understands your notes" |
-| "Integrates with your CRM" | "Pulls in your contacts from {{ EXAMPLE_CRM }}" |
+| "Integrates with your CRM" | "Pulls in your contacts from HubSpot" |
 | "Generates actionable insights" | "Tells you what to do next" |
-
-*(Replace `{{ EXAMPLE_CRM }}` with a CRM your users actually use, e.g. HubSpot, Salesforce)*
 
 ### Be Specific, Not Vague
 
@@ -147,7 +140,7 @@ Users care about what they receive, not how it's made.
 Before publishing, confirm:
 
 - [ ] Does it lead with value (benefit first)?
-- [ ] Is it 1–2 sentences + optional bullets?
+- [ ] Is it 1-2 sentences + optional bullets?
 - [ ] Does it use everyday language?
 - [ ] Is it specific, not vague?
 - [ ] Does it describe outputs, not internals?
@@ -158,25 +151,37 @@ Before publishing, confirm:
 
 ## Before/After Examples
 
-### Example 1: {{ NAMING_BEFORE_AFTER_1_NAME }}
+### Example 1: Meeting Prep Agent
 
 **Before:**
-> "{{ NAMING_BEFORE_1 }}"
+> "AI-powered meeting preparation assistant that utilizes CRM integration and NLP to generate comprehensive pre-meeting briefing documents."
 
 **After:**
-> "{{ NAMING_AFTER_1 }}"
-
-*(Fill in with a real example from your domain)*
+> "Walk into every meeting ready. This agent pulls in your calendar, CRM notes, and LinkedIn research to create a 2-minute briefing you can skim before any call."
 
 ---
 
-### Example 2: {{ NAMING_BEFORE_AFTER_2_NAME }}
+### Example 2: Sales Email Writer
 
 **Before:**
-> "{{ NAMING_BEFORE_2 }}"
+> "Automated email generation tool leveraging LLM capabilities and user context for personalized sales outreach."
 
 **After:**
-> "{{ NAMING_AFTER_2 }}"
+> "Write sales emails that sound like you, not a robot. Just tell it what you're pitching, and it drafts three variations based on your tone and prospect intel."
+>
+> - Matches your writing style
+> - Uses real context from CRM or LinkedIn
+> - Gives you options: short, medium, or detailed
+
+---
+
+### Example 3: Lead Scorer
+
+**Before:**
+> "Lead scoring solution with multi-variable analysis"
+
+**After:**
+> "Stop guessing which leads to call first. This agent scores your pipeline based on fit, engagement, and timing — so you focus on deals that'll actually close."
 
 ---
 
@@ -193,8 +198,8 @@ These add no value: AI, Smart, Auto, Magic, Intelligent, Advanced, Ultimate, Pro
 - ✓ "Prep for meetings in 2 minutes"
 - ✗ "Can help you potentially prepare for meetings"
 
-### Match your brand voice
-See `04_Polish/Writing_Style_Guide.md` for full details.
+### Match Agent.ai voice
+Warm, clear, and quietly confident. See `01_Writing_Style_Guide.md` for full details.
 
 ---
 
@@ -202,7 +207,7 @@ See `04_Polish/Writing_Style_Guide.md` for full details.
 
 | Element | Pattern | Example |
 |---------|---------|---------|
-| **Name** | [Outcome/Domain] + [Task/Role] | {{ QUICK_REF_NAME_EXAMPLE }} |
-| **Description line 1** | Value promise | {{ QUICK_REF_DESC_LINE_1 }} |
-| **Description line 2** | How it helps | {{ QUICK_REF_DESC_LINE_2 }} |
-| **Optional bullets** | Key capabilities | {{ QUICK_REF_BULLETS }} |
+| **Name** | [Outcome/Domain] + [Task/Role] | "Meeting Prep" |
+| **Description line 1** | Value promise | "Walk into every meeting ready." |
+| **Description line 2** | How it helps | "Get a 2-minute brief from your calendar and CRM." |
+| **Optional bullets** | Key capabilities | "- Pulls from HubSpot and LinkedIn" |

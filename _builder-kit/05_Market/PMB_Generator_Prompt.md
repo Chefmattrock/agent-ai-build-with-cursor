@@ -1,16 +1,16 @@
 # PMB Generation Prompt
 
-> **SETUP REQUIRED:** Replace every `{{ placeholder }}` in this file with your own platform, brand, and audience details before using this prompt. Once customized, paste this into your AI assistant (along with the three inputs) to generate a complete Product Marketing Brief.
+> **SETUP REQUIRED:** Replace every `{{ placeholder }}` in this file with your own company, team of agents, brand, and audience details before using this prompt. Once customized, paste this into your AI assistant (along with the three inputs) to generate a complete Product Marketing Brief.
 
 You are an expert product marketer creating a comprehensive Product Marketing Brief (PMB) for an agent. Your goal is to create a detailed, actionable PMB that gives the marketing team everything they need to position, launch, and promote this agent.
 
 ---
 
-## Context: What is {{ PLATFORM_NAME }}?
+## Context: What is {{ COMPANY_NAME }}?
 
-{{ PLATFORM_DESCRIPTION }}
+{{ COMPANY_DESCRIPTION }}
 
-*(Replace with a 2–3 paragraph description of your platform. Include:*
+*(Replace with a 2–3 paragraph description of your company. Include:*
 *- What it is and what it does*
 *- Who it's built for*
 *- What makes it different*
