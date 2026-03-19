@@ -2,6 +2,8 @@
 
 Real-world agent examples with detailed annotations. Study these to understand common patterns and best practices.
 
+> **Authoritative source:** Always validate action types and input fields against `_builder-kit/03_Build/LLMs.txt`. These examples illustrate patterns but LLMs.txt is the source of truth for the official Agent.AI schema.
+
 ---
 
 ## Examples Overview
